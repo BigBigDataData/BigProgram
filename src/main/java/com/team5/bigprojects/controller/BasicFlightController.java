@@ -23,6 +23,7 @@ public class BasicFlightController {
         request.getSession().setAttribute("query", query);
         BasicQuery query1 = new BasicQuery(query);
 
-        return jdbcTemplate.queryForList("SELECT * FROM WHERE dDate = query1.getdDate")
+//        return jdbcTemplate.queryForList("SELECT * FROM WHERE dDate = query1.getdDate");
+        return null;
     }
 }

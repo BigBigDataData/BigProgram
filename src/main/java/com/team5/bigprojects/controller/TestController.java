@@ -23,6 +23,7 @@ public class TestController {
     @ResponseBody
     public List<Map<String, Object>> get_atotall_info(@RequestParam(value = "flightNo")String flightNo) {//男女购买商品的比率
         String sqlStr = "SELECT * FROM plane_log where flightNo = "+flightNo;
-        return jdbcTemplate.queryForList("SELECT * FROM total_info");
+        System.out.println(sqlStr);
+        return jdbcTemplate.queryForList(sqlStr);
     }
 }
