@@ -16,11 +16,13 @@ public class BasicQuery implements Serializable{
         this.setaCity(query.getaCity());
     }
 
-    public BasicQuery(String dDate, String dCity, String aCity, Integer num) {
+    public BasicQuery(String dDate, String dCity, String aCity) {
         this.dDate = dDate;
         this.dCity = dCity;
         this.aCity = aCity;
     }
+
+
 
     public String getdDate() {
         return dDate;

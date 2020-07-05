@@ -1,5 +1,6 @@
 package com.team5.bigprojects.controller;
 
+import com.team5.bigprojects.bean.BasicQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
@@ -10,20 +11,31 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author lenovo
+ * @author
+ * 单程查询
  */
 @Controller
 public class TestController {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    /**
-     *1.1-1.3统计数据的总体特征
-     * */
-    @GetMapping("/total-info")
+
+    @GetMapping("/Query")
     @ResponseBody
-    public List<Map<String, Object>> get_atotall_info(@RequestParam(value = "flightNo")String flightNo) {//男女购买商品的比率
-        String sqlStr = "SELECT * FROM plane_log where flightNo = "+flightNo;
+    public List<Map<String, Object>> get_atotall_info(@RequestParam(value = "dDate")String dDate,
+                                                      @RequestParam(value = "dCity")String dCity,
+                                                      @RequestParam(value = "aCity")String aCity) {
+        String sqlStr = "SELECT * FROM plane_log where dDate = "+dDate +"AND dCity ="+dCity+"AND aCity = "+ aCity +"ORDER BY price";
         System.out.println(sqlStr);
+
         return jdbcTemplate.queryForList(sqlStr);
+
+
     }
+
+
+
+
+
+
+
 }
