@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.8/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!--    引入bootStrap的相关文件-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+<div id="app">
+    <el-container>
+        <el-header>淘机票</el-header>
+        <el-main>
+            <el-row :gutter="20">
+                <el-col :span="16"><div class="grid-content bg-purple">
+                    <el-button type="text">单程</el-button>
+                    <el-button type="text">往返</el-button>
+                    <el-button type="text">多程</el-button>
+                </div></el-col>
+                <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+            </el-row>
+<!--            搜索框所在的位置-->
+            <div>
+                <div id="single_line">
+                    <el-select v-model="value_locate1" placeholder="请选择出发地">
+                        <el-option-group
+                                v-for="group in options"
+                                :key="group.label"
+                                :label="group.label">
+                            <el-option
+                                    v-for="item in group.options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-option-group>
+                    </el-select>
+                    <el-select v-model="value_locate2" placeholder="请选择目的地">
+                        <el-option-group
+                                v-for="group in options"
+                                :key="group.label"
+                                :label="group.label">
+                            <el-option
+                                    v-for="item in group.options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-option-group>
+                    </el-select>
+                        <el-date-picker
+                                v-model="value1"
+                                type="date"
+                                placeholder="选择日期">
+                        </el-date-picker>
+                        <el-button type="default" onclick="getSingle()"><span class="glyphicon glyphicon-plane">搜索</span></el-button>
+                    </div>
+                </div>
+<!--            机票显示的位置-->
+            <div>
+                <div class="infinite-list-wrapper" style="overflow:auto">
+                    <ul
+                            class="list"
+                            v-infinite-scroll="load"
+                            infinite-scroll-disabled="disabled">
+                        <li v-for="i in count" class="list-item">{{ i }}</li>
+                    </ul>
+                    <p v-if="loading">加载中...</p>
+                    <p v-if="noMore">没有更多了</p>
+                </div>
+            </div>
+        </el-main>
+    </el-container>
+</div>
+</body>
+
+<script>
+    new Vue({
+        el:'#app',
+        data:{
+            count: 10,
+            loading: false,
+             value1:'',
+             options: [{
+                label: '热门城市',
+                options: [{
+                    value: 'Shanghai',
+                    label: '上海'
+                }, {
+                    value: 'Beijing',
+                    label: '北京'
+                }]
+            }, {
+                label: '城市名',
+                options: [{
+                    value: 'Chengdu',
+                    label: '成都'
+                }, {
+                    value: 'Shenzhen',
+                    label: '深圳'
+                }, {
+                    value: 'Guangzhou',
+                    label: '广州'
+                }, {
+                    value: 'Dalian',
+                    label: '大连'
+                }]
+            }],
+            value_locate1:'',
+            value_locate2:''
+        },
+        computed: {
+            noMore () {
+                return this.count >= 20
+            },
+            disabled () {
+                return this.loading || this.noMore
+            }
+        },
+        methods:{
+            load () {
+                this.loading = true;
+                setTimeout(() => {
+                    this.count += 2;
+                    this.loading = false
+                }, 2000)
+            },
+            // 获取单程票的数据
+            getSingle(){
+                axios.get('/round-trip?dCity='+this.value_locate1+'&aCity='+this.value_locate2+'&dDate='+this.value1).then(
+                    successResponse=>{
+                        console.log(successResponse)
+                    }
+                ).catch(()=>{
+                    console.log("error")
+                })
+            },
+        }
+    })
+</script>
+<style>
+    .el-input{
+        width: 300px;
+    }
+    .single_line{
+        display: flex;
+        /*flex: 1;*/
+    }
+    /*导航行的样式*/
+    .el-row {
+        margin-bottom: 10px;
+    }
+    .el-col {
+        border-radius: 4px;
+    }
+    .bg-purple-dark {
+        background: #99a9bf;
+    }
+    .bg-purple {
+        background: #d3dce6;
+    }
+    .bg-purple-light {
+        background: #e5e9f2;
+    }
+    .grid-content {
+        border-radius: 4px;
+        height: 36px;
+    }
+    .row-bg {
+        background-color: #f9fafc;
+    }
+    /*外面大框架的样式*/
+    .el-header{
+        background-color: #B3C0D1;
+        color: #333;
+        text-align: center;
+        line-height: 60px;
+    }
+
+    .el-main {
+        background-color: #E9EEF3;
+        color: #333;
+        /*text-align: center;*/
+        /*line-height: 460px;*/
+    }
+    .el-button{
+        color: black;
+    }
+    body{
+        margin: 0px;
+    }
+</style>
+</html>
