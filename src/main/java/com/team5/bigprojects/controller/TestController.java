@@ -24,7 +24,7 @@ public class TestController {
     public List<Map<String, Object>> get_atotall_info(@RequestParam(value = "dDate")String dDate,
                                                       @RequestParam(value = "dCity")String dCity,
                                                       @RequestParam(value = "aCity")String aCity) {
-        String sqlStr = "SELECT * FROM plane_log where dDate = "+dDate +"AND dCity ="+dCity+"AND aCity = "+ aCity +"ORDER BY price";
+        String sqlStr = "SELECT * FROM plane_log where dDate = "+dDate +" AND dCity ="+dCity+" AND aCity = "+ aCity +" ORDER BY price";
         System.out.println(sqlStr);
 
         return jdbcTemplate.queryForList(sqlStr);
