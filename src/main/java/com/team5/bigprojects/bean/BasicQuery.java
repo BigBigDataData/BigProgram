@@ -4,9 +4,16 @@ import java.io.Serializable;
 @description 保存查询请求信息
  */
 public class BasicQuery implements Serializable{
+    @javax.validation.constraints.NotBlank(message = "出发日期不能为空,请输入")
+
     private String dDate; //出发日期
+
+     @javax.validation.constraints.NotBlank(message = "出发地点不能为空,请输入")
     private String dCity; //出发地
+
+    @javax.validation.constraints.NotBlank(message = "目的地点不能为空,请输入")
     private String aCity; //目的地
+
 
     public BasicQuery() {
     }
