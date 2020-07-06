@@ -40,14 +40,16 @@ public class TestController {
     }
 }
 */
+
 @Controller
 public class TestController {
+    /*
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @GetMapping("/round-trip-leave")
+    @GetMapping("/more-trip-first")
     @ResponseBody
-    public List<Map<String, Object>> get_roundtrip_leave_info(@Valid BasicQuery query, BindingResult bindingResult) {
+    public List<Map<String, Object>> get_moretrip_first_info(@Valid BasicQuery query, BindingResult bindingResult) {
         List<Map<String, Object>> listMaps = new ArrayList<Map<String, Object>>();
         Map<String, Object> map1 = new HashMap<String, Object>();
         if(bindingResult.hasErrors()){
@@ -71,9 +73,9 @@ public class TestController {
         return jdbcTemplate.queryForList(sqlStr);
     }
 
-    @GetMapping("/round-trip-back")
+    @GetMapping("/more-trip-second")
     @ResponseBody
-    public List<Map<String, Object>> get_roundtrip_back_info(@Valid BasicQuery query, BindingResult bindingResult) {
+    public List<Map<String, Object>> get_moretrip_second_info(@Valid BasicQuery query, BindingResult bindingResult) {
         List<Map<String, Object>> listMaps = new ArrayList<Map<String, Object>>();
         Map<String, Object> map1 = new HashMap<String, Object>();
         if(bindingResult.hasErrors()){
@@ -96,4 +98,6 @@ public class TestController {
         String sqlStr = "SELECT * FROM plane_log where dDate = "+query.getdDate() +"AND dCity ="+query.getdCity()+"AND aCity = "+ query.getaCity() +"ORDER BY price";
         return jdbcTemplate.queryForList(sqlStr);
     }
+
+     */
 }
