@@ -24,11 +24,19 @@
         <el-main>
             <el-row :gutter="20">
                 <el-col :span="16"><div class="grid-content bg-purple">
+                    排序：
+                    <el-button type="text">价格</el-button>
+                    <el-button type="text">时长</el-button>
+                    <el-button type="text">起飞时间</el-button>
+                    <el-button type="text">飞行时间</el-button>
+                    <el-button type="text">到达时间</el-button>
+                    <el-button type="text">性价比</el-button>
+                </div></el-col>
+                <el-col :span="8"><div class="grid-content bg-purple">
                     <el-button type="text">单程</el-button>
                     <el-button type="text">往返</el-button>
                     <el-button type="text">多程</el-button>
                 </div></el-col>
-                <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
             </el-row>
 <!--            搜索框所在的位置-->
             <div style="margin: auto">
@@ -62,6 +70,7 @@
                         <el-date-picker
                                 v-model="value1"
                                 type="date"
+                                format="yyyy-MM-dd" value-format="yyyy-MM-dd"
                                 placeholder="选择日期">
                         </el-date-picker>
                         <el-button type="default" onclick=vee.getSingle()><span class="glyphicon glyphicon-plane">搜索</span></el-button>
@@ -69,20 +78,30 @@
                 </div>
 
 <!--            机票显示的位置-->
-            <div id="list_parent">
+            <div id="list_parent" v-if="hasFlight">
                 <div class="infinite-list-wrapper" style="overflow:auto;margin:auto">
                     <ul
                             class="list"
                             v-infinite-scroll="load"
                             infinite-scroll-disabled="disabled">
                         <el-card class="box-card">
-                            <div v-for="i in count" class="infinite-list-item">
+                            <div v-for="p in planeList" class="infinite-list-item">
                                 <div slot="header" class="clearfix">
-                                    <span>航班号</span>
+                                    <span>{{p.airname}}-{{p.flightNo}}-￥{{p.price}}</span>
                                     <el-button style="float: right; padding: 3px 0" type="text">选择航程</el-button>
                                 </div>
                                 <div class="text item">
-                                    {{'航班信息 '}}
+                                    <el-row>
+                                        <el-col :span="8"><div class="grid-content bg-purple">
+                                            {{p.dCity}}--{{p.dTime}}--{{p.dAirport}}
+                                        </div></el-col>
+                                        <el-col :span="8"><div class="grid-content bg-purple-light">
+                                            --------------{{p.via}}-------------->
+                                        </div></el-col>
+                                        <el-col :span="8"><div class="grid-content bg-purple">
+                                            {{p.aCity}}--{{p.aTime}}--{{p.aAirport}}
+                                        </div></el-col>
+                                    </el-row>
                                 </div>
                                 <el-divider></el-divider>
                             </div>
@@ -101,38 +120,63 @@
     var vee = new Vue({
         el:'#app',
         data:{
+            // 一辆航班的数据信息,显示的时候暂时没用到，
+            planeList:[],
             plane:{
-               planeNo:'',
-                dCity:'',
+                // 到达机场
+                aAirport:'',
+                // 到达机场三字码
+                aCD:'',
+                // 到达城市
                 aCity:'',
-                dTime:'',
+                // 到达时刻
                 aTime:'',
+                // 航空公司
+                airname:'',
+                // 出发机场
+                dAirport:'',
+                // 出发机场三字码
+                dCD:'',
+                // 出发城市
+                dCity:'',
+                // 出发日期
+                dDate:'',
+                // 出发时刻
+                dTime:'',
+                // 航班号
+                flightNo:'',
+                // 价格
+                price:'',
+                // 准点率
+                rate:'',
+                // 经停
+                via:''
             },
-            count: 10,
+            count: 0,
             loading: false,
              value1:'',
              options: [{
                 label: '热门城市',
                 options: [{
-                    value: 'Shanghai',
+                    value: '上海',
                     label: '上海'
                 }, {
-                    value: 'Beijing',
+                    value: '北京',
                     label: '北京'
                 }]
             }, {
                 label: '城市名',
                 options: [{
-                    value: 'Chengdu',
+                    value: '成都',
                     label: '成都'
                 }, {
-                    value: 'Shenzhen',
+                    value: '深圳',
                     label: '深圳'
                 }, {
-                    value: 'Guangzhou',
+                    value: '广州',
                     label: '广州'
                 }, {
-                    value: 'Dalian',
+                    value: '大连',
                     label: '大连'
                 }]
             }],
@@ -141,24 +185,33 @@
         },
         computed: {
             noMore () {
-                return this.count >= 20
+                if(this.planeList.length!==0){
+                    return this.count > this.planeList.length;
+                }
             },
             disabled () {
                 return this.loading || this.noMore
+            },
+            hasFlight(){
+                return this.planeList.length !== 0;
             }
         },
+
         methods:{
             load (){
                 this.loading = true;
                 setTimeout(() => {
-                    this.count += 2;
+                    this.count = this.planeList.length;
+                    this.count+=1;
+                    // console.log(this.count);
                     this.loading = false
                 }, 2000)
             },
             getSingle(){
-                axios.get('/BasicQuery1?&dDate='+this.value1+'&dCity='+this.value_locate1+'&aCity='+this.value_locate2).then(
+                axios.get('/BasicQuery1?&dDate=\''+this.value1+'\'&dCity=\''+this.value_locate1+'\'&aCity=\''+this.value_locate2+'\'').then(
                 successResponse=>{
-                    console.log(successResponse)
+                    console.log(successResponse);
+                    this.planeList = successResponse.data;
             }
         ).catch(()=>{
             console.log("error")
@@ -190,6 +243,7 @@
 
     .box-card {
         width: 800px;
+        margin-top: 20px;
     }
 
     /*无限滚动条*/
@@ -227,6 +281,8 @@
     .grid-content {
         border-radius: 4px;
         height: 36px;
+        text-align: center;
+        line-height: 36px;
     }
     .row-bg {
         background-color: #f9fafc;
