@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<!--    引入bootStrap的相关文件-->
+    <!--    引入bootStrap的相关文件-->
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 
@@ -33,12 +33,12 @@
                     <el-button type="text">性价比</el-button>
                 </div></el-col>
                 <el-col :span="8"><div class="grid-content bg-purple">
-                    <el-button type="text">单程</el-button>
-                    <el-button type="text"><a href="round-trip.html">往返</a></el-button>
+                    <el-button type="text" ><a href="home.html">单程</a></el-button>
+                    <el-button type="text">往返</el-button>
                     <el-button type="text"><a href="multiple-trip.html">多程</a></el-button>
                 </div></el-col>
             </el-row>
-<!--            搜索框所在的位置-->
+            <!--            搜索框所在的位置-->
             <div style="margin: auto">
                 <div id="single_line" >
                     <el-select v-model="value_locate1" placeholder="请选择出发地">
@@ -67,15 +67,19 @@
                             </el-option>
                         </el-option-group>
                     </el-select>
-                        <el-date-picker
-                                v-model="value1"
-                                type="date"
-                                placeholder="选择日期">
-                        </el-date-picker>
-                        <el-button type="default" onclick=vee.getSingle()><span class="glyphicon glyphicon-plane">搜索</span></el-button>
-                    </div>
+                    <el-date-picker
+                            v-model="value1"
+                            type="daterange"
+                            range-separator="=>"
+                            format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                    </el-date-picker>
+                    <el-button type="default" onclick=vee.roundtrip()><span class="glyphicon glyphicon-plane">搜索</span></el-button>
                 </div>
-<!--            机票显示的位置-->
+            </div>
+
+            <!--            机票显示的位置-->
             <div id="list_parent" v-if="hasFlight">
                 <div class="infinite-list-wrapper" style="overflow:auto;margin:auto">
                     <ul
@@ -83,7 +87,7 @@
                             v-infinite-scroll="load"
                             infinite-scroll-disabled="disabled">
                         <el-card class="box-card">
-                            <div v-for="p in planeList" class="infinite-list-item">
+                            <div v-for="p in gotoList" class="infinite-list-item">
                                 <div slot="header" class="clearfix">
                                     <span>{{p.airname}}-{{p.flightNo}}-￥{{p.price}}</span>
                                     <el-button style="float: right; padding: 3px 0" type="text">选择航程</el-button>
@@ -119,7 +123,8 @@
         el:'#app',
         data:{
             // 一辆航班的数据信息,显示的时候暂时没用到，
-            planeList:[],
+            gotoList:[],
+            backList:[],
             plane:{
                 // 到达机场
                 aAirport:'',
@@ -152,8 +157,8 @@
             },
             count: 0,
             loading: false,
-             value1:'',
-             options: [{
+            value1:'',
+            options: [{
                 label: '热门城市',
                 options: [{
                     value: '上海',
@@ -183,15 +188,15 @@
         },
         computed: {
             noMore () {
-                if(this.planeList.length!==0){
-                    return this.count > this.planeList.length;
+                if(this.gotoList.length!==0){
+                    return this.count > this.gotoList.length;
                 }
             },
             disabled () {
                 return this.loading || this.noMore
             },
             hasFlight(){
-                return this.planeList.length !== 0;
+                return this.gotoList.length !== 0;
             }
         },
 
@@ -199,23 +204,36 @@
             load (){
                 this.loading = true;
                 setTimeout(() => {
-                    this.count = this.planeList.length;
+                    this.count = this.gotoList.length;
                     this.count+=1;
                     // console.log(this.count);
                     this.loading = false
                 }, 2000)
             },
-            getSingle(){
-                axios.get('/BasicQuery1?&dDate=\''+this.value1+'\'&dCity=\''+this.value_locate1+'\'&aCity=\''+this.value_locate2+'\'').then(
-                successResponse=>{
-                    console.log(successResponse);
-                    this.planeList = successResponse.data;
-            }
-        ).catch(()=>{
-            console.log("error")
-        })
-    }
-            // 获取单程票的数据
+            //去程
+            roundtrip(){
+                console.log(typeof(this.value1));
+                const value1 = this.value1 + '';
+                console.log(typeof(value1));
+                const dates = value1.split(",");
+                axios.get('/round-trip-leave?&dDate1=\''+dates[0]+'\'&dCity=\''+this.value_locate1+'\'&aCity=\''+this.value_locate2+'\'').then(
+                    successResponse=>{
+                        console.log(successResponse);
+                        this.gotoList = successResponse.data;
+                    }
+                ).catch(()=>{
+                    console.log("error")
+                });
+                axios.get('/round-trip-back?&dDate2=\''+dates[1]+'\'&dCity=\''+this.value_locate1+'\'&aCity=\''+this.value_locate2+'\'').then(
+                    successResponse=>{
+                        console.log(successResponse);
+                        this.backList = successResponse.data;
+                    }
+                ).catch(()=>{
+                    console.log("error")
+                })
+            },
+            //返程
         }
     });
 
