@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
@@ -15,15 +14,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 @Controller
-public class BasicFlightController {
+public class IntelRecomController {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @GetMapping("/BasicQuery1")
+    /**
+     *
+     * @param query
+     * @param bindingResult
+     * @return
+     * 存在问题 sql查询
+     */
+    @GetMapping("/Intel-Recom")
     @ResponseBody
-    public List<Map<String, Object>> get_flight_info(@Valid BasicQuery query, BindingResult bindingResult) {
+    public List<Map<String, Object>> get_intelRecom_info(@Valid BasicQuery query, BindingResult bindingResult) {
         List<Map<String, Object>> listMaps = new ArrayList<Map<String, Object>>();
         Map<String, Object> map1 = new HashMap<String, Object>();
         if(bindingResult.hasErrors()){
@@ -31,19 +36,19 @@ public class BasicFlightController {
             System.out.println(objectErrors.toString());
             for(ObjectError objectError: objectErrors){
                 System.out.println("objectError = " + objectError.getObjectName());
-                //map1.put("resultName",objectError.getObjectName());
+                map1.put("resultName",objectError.getObjectName());
                 System.out.println("objectError = " + objectError.getDefaultMessage());
                 map1.put("resultMessage",objectError.getDefaultMessage());
                 System.out.println("objectError = " + objectError.getCode());
-                //map1.put("resultCode",objectError.getCode());
+                map1.put("resultCode",objectError.getCode());
                 System.out.println("objectError = " + objectError.getArguments());
-                //map1.put("resultArguments",objectError.getArguments());
+                map1.put("resultArguments",objectError.getArguments());
                 String str = objectError.getDefaultMessage();
-                //listMaps.add(map1)
+                listMaps.add(map1);
             }
             return null;
         }
-        String sqlStr = "SELECT * FROM plane_log where dDate = "+query.getdDate() +"AND dCity ="+query.getdCity()+"AND aCity = "+ query.getaCity() +"ORDER BY price";
+        String sqlStr = "SELECT * FROM plane_log WHERE dDate = \"+query.getdDate() +\"AND dCity =\"+query.getdCity()+\"AND aCity = "+ query.getaCity() + "AS a LEFT JOIN dws_plane_score b ON a.flightNo=b.flightNo";
         return jdbcTemplate.queryForList(sqlStr);
     }
 
