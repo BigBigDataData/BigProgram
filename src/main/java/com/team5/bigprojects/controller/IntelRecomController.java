@@ -24,7 +24,7 @@ public class IntelRecomController {
      * @param query
      * @param bindingResult
      * @return
-     * 存在问题 sql查询
+     *
      */
     @GetMapping("/Intel-Recom")
     @ResponseBody
