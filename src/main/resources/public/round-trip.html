@@ -80,7 +80,7 @@
             </div>
 
             <!--            机票显示的位置-->
-            <div id="list_parent" v-if="hasFlight">
+            <div v-if="hasFlight">
                 <div class="infinite-list-wrapper" style="overflow:auto;margin:auto">
                     <ul
                             class="list"
@@ -90,7 +90,7 @@
                             <div v-for="p in gotoList" class="infinite-list-item">
                                 <div slot="header" class="clearfix">
                                     <span>{{p.airname}}-{{p.flightNo}}-￥{{p.price}}</span>
-                                    <el-button style="float: right; padding: 3px 0" type="text">选择航程</el-button>
+                                    <el-button style="float: right; padding: 3px 0" type="text">选择去程</el-button>
                                 </div>
                                 <div class="text item">
                                     <el-row>
@@ -113,6 +113,43 @@
                     <p v-if="noMore">没有更多了</p>
                 </div>
             </div>
+            <el-divider></el-divider>
+            <el-divider></el-divider>
+<!--            返回的机票显示的位置-->
+            <div v-if="hasBackFlight">
+                <div class="infinite-list-wrapper" style="overflow:auto;margin:auto">
+                    <ul
+                            class="list"
+                            v-infinite-scroll="loadback"
+                            infinite-scroll-disabled="disabled">
+                        <el-card class="box-card">
+                            <div v-for="b in backList" class="infinite-list-item">
+                                <div slot="header" class="clearfix">
+                                    <span>{{b.airname}}-{{b.flightNo}}-￥{{b.price}}</span>
+                                    <el-button style="float: right; padding: 3px 0" type="text">选择返程</el-button>
+                                </div>
+                                <div class="text item">
+                                    <el-row>
+                                        <el-col :span="8"><div class="grid-content row-bg">
+                                            {{b.dCity}}--{{b.dTime}}--{{b.dAirport}}
+                                        </div></el-col>
+                                        <el-col :span="8"><div class="grid-content bg-purple-light">
+                                            <--------------{{b.via}}--------------
+                                        </div></el-col>
+                                        <el-col :span="8"><div class="grid-content row-bg">
+                                            {{b.aCity}}--{{b.aTime}}--{{b.aAirport}}
+                                        </div></el-col>
+                                    </el-row>
+                                </div>
+                                <el-divider></el-divider>
+                            </div>
+                        </el-card>
+                    </ul>
+                    <p v-if="loading">加载中...</p>
+                    <p v-if="noMore">没有更多了</p>
+                </div>
+            </div>
+
         </el-main>
     </el-container>
 </div>
@@ -195,16 +232,30 @@
             disabled () {
                 return this.loading || this.noMore
             },
+            // 判断去程的机票是否有
             hasFlight(){
                 return this.gotoList.length !== 0;
+            },
+            // 判断回来的机票是否有，控制是否显示card
+            hasBackFlight(){
+                return this.backList.length !== 0;
             }
         },
-
         methods:{
+            // 去程的机票的Load
             load (){
                 this.loading = true;
                 setTimeout(() => {
                     this.count = this.gotoList.length;
+                    this.count+=1;
+                    this.loading = false
+                }, 2000)
+            },
+            // 返程的机票的load
+            loadback (){
+                this.loading = true;
+                setTimeout(() => {
+                    this.count = this.backList.length;
                     this.count+=1;
                     // console.log(this.count);
                     this.loading = false
@@ -212,11 +263,9 @@
             },
             //去程
             roundtrip(){
-                console.log(typeof(this.value1));
-                const value1 = this.value1 + '';
-                console.log(typeof(value1));
+                var value1 = this.value1 + "";
                 const dates = value1.split(",");
-                axios.get('/round-trip-leave?&dDate1=\''+dates[0]+'\'&dCity=\''+this.value_locate1+'\'&aCity=\''+this.value_locate2+'\'').then(
+                axios.get('/round-trip-leave?&dDate=\''+dates[0]+'\'&dCity=\''+this.value_locate1+'\'&aCity=\''+this.value_locate2+'\'').then(
                     successResponse=>{
                         console.log(successResponse);
                         this.gotoList = successResponse.data;
@@ -224,7 +273,7 @@
                 ).catch(()=>{
                     console.log("error")
                 });
-                axios.get('/round-trip-back?&dDate2=\''+dates[1]+'\'&dCity=\''+this.value_locate1+'\'&aCity=\''+this.value_locate2+'\'').then(
+                axios.get('/round-trip-back?&dDate=\''+dates[1]+'\'&dCity=\''+this.value_locate2+'\'&aCity=\''+this.value_locate1+'\'').then(
                     successResponse=>{
                         console.log(successResponse);
                         this.backList = successResponse.data;
@@ -236,6 +285,7 @@
             //返程
         }
     });
+
 
 </script>
 <style>
@@ -262,10 +312,6 @@
         margin-top: 20px;
     }
 
-    /*无限滚动条*/
-    .list_parent{
-
-    }
     .infinite-list-wrapper{
         /*position: relative;*/
         /*position: center;*/
