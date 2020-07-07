@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.8/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!--    引入bootStrap的相关文件-->
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/js/echarts.min.js"></script>
+</head>
+
+<body>
+<div id="app">
+    <el-container>
+        <el-header>淘机票</el-header>
+        <el-main>
+            <el-row :gutter="20">
+                <el-col :span="8"><div class="grid-content bg-purple">
+                    <el-button type="text"><a href="home.html">单程</a></el-button>
+                    <el-button type="text"><a href="round-trip.html">往返</a></el-button>
+                    <el-button type="text"><a href="multiple-trip.html">多程</a></el-button>
+                    <el-button type="text">何时飞</el-button>
+                    <el-button type="text"><a href="find-somewhere.html.html">飞哪里</a></el-button>
+                </div></el-col>
+            </el-row>
+            <!--            搜索框所在的位置-->
+            <div style="margin: auto">
+                <div id="single_line" >
+                    <el-select v-model="value_locate1" placeholder="请选择出发地">
+                        <el-option-group
+                                v-for="group in options"
+                                :key="group.label"
+                                :label="group.label">
+                            <el-option
+                                    v-for="item in group.options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-option-group>
+                    </el-select>
+                    <el-select v-model="value_locate2" placeholder="请选择目的地">
+                        <el-option-group
+                                v-for="group in options"
+                                :key="group.label"
+                                :label="group.label">
+                            <el-option
+                                    v-for="item in group.options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-option-group>
+                    </el-select>
+                    <el-button type="default" onclick=vee.getSingle()><span class="glyphicon glyphicon-plane">搜索</span></el-button>
+                </div>
+            </div>
+<!--            机票统计显示的位置-->
+            <div v-if="!lowestPrice_day.length===0">
+                <el-row :gutter="20">
+                    <el-col :span="18" :offset="3"><div class="chart-content bg-purple">
+                        <div id="monthChart" style="width: 800px;height: 400px"></div>
+                    </div></el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="18" :offset="3"><div class="chart-content bg-purple">
+                        <div id="dayChart" style="width: 800px;height: 400px"></div>
+                    </div></el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="18" :offset="3"><div class="chart-content bg-purple">
+                        <div id="backChart" style="width: 800px;height: 400px"></div>
+                    </div></el-col>
+                </el-row>
+            </div>
+        </el-main>
+    </el-container>
+</div>
+</body>
+<script>
+    // 基于准备好的dom，初始化ECharts实例
+    var vee = new Vue({
+        el:'#app',
+        data:{
+            // 一辆航班的数据信息,显示的时候暂时没用到，
+            planeList:[],
+            options: [{
+                label: '热门城市',
+                options: [{
+                    value: '上海',
+                    label: '上海'
+                }, {
+                    value: '北京',
+                    label: '北京'
+                }]
+            }, {
+                label: '城市名',
+                options: [{
+                    value: '成都',
+                    label: '成都'
+                }, {
+                    value: '深圳',
+                    label: '深圳'
+                }, {
+                    value: '广州',
+                    label: '广州'
+                }, {
+                    value: '大连',
+                    label: '大连'
+                }]
+            }],
+            value_locate1:'',
+            value_locate2:'',
+            value1:'',
+            lowestPrice_day:[],
+            lowestPrice_month: [],
+            lowestPrice_day_back: []
+        },
+        // 挂载echaert图表
+        mounted(){
+          this.drawmonthChart();
+          this.drawbackChart();
+          this.drawdayChart();
+        },
+        methods:{
+            drawbackChart(){
+                var dataAxis = [1,2,3,4,5,6,7,8,9];
+                var myChartback = echarts.init(document.getElementById('backChart'));
+                var optionback = {
+                    title: {
+                        text: '特性示例：渐变色 阴影 点击缩放',
+                        subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom'
+                    },
+                    xAxis: {
+                        data: dataAxis,
+                        axisLabel: {
+                            inside: true,
+                            textStyle: {
+                                color: '#fff'
+                            }
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        axisLine: {
+                            show: false
+                        },
+                        z: 10
+                    },
+                    yAxis: {
+                        axisLine: {
+                            show: false
+                        },
+                        axisTick: {
+                            show: false
+                        },
+                        axisLabel: {
+                            textStyle: {
+                                color: '#999'
+                            }
+                        }
+                    },
+                    dataZoom: [
+                        {
+                            type: 'inside'
+                        }
+                    ],
+                    series: [
+                        { // For shadow
+                            type: 'bar',
+                            itemStyle: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            barGap: '-100%',
+                            barCategoryGap: '40%',
+                            data: [],
+                            markPoint: {
+                                data: [
+                                    {name: '月最高',value: 182.2, xAxis: 7, yAxis: 7},
+                                    {name: '月最低',value: 2.3, xAxis:3, yAxis: 3}
+                                ]
+                            },
+                            markLine: {
+                                data: [
+                                    {type: 'average', name: '平均值'}
+                                ]
+                            },
+                            animation: false
+                        },
+                        {
+                            type: 'bar',
+                            itemStyle: {
+                                color: new echarts.graphic.LinearGradient(
+                                    0, 0, 0, 1,
+                                    [
+                                        {offset: 0, color: '#83bff6'},
+                                        {offset: 0.5, color: '#188df0'},
+                                        {offset: 1, color: '#188df0'}
+                                    ]
+                                )
+                            },
+                            emphasis: {
+                                itemStyle: {
+                                    color: new echarts.graphic.LinearGradient(
+                                        0, 0, 0, 1,
+                                        [
+                                            {offset: 0, color: '#2378f7'},
+                                            {offset: 0.7, color: '#2378f7'},
+                                            {offset: 1, color: '#83bff6'}
+                                        ]
+                                    )
+                                }
+                            },
+                            data: [1,2,3,4,5,6,7,8,9]
+                        }
+                    ]
+                };
+// Enable data zoom when user click bar.
+                var zoomSize = 6;
+                myChartback.on('click', function (params) {
+                    // console.log(dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)]);
+                    myChartback.dispatchAction({
+                        type: 'dataZoom',
+                        startValue: dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)],
+                        endValue: dataAxis[Math.min(params.dataIndex + zoomSize / 2, data.length - 1)]
+                    });
+                });
+                myChartback.setOption(optionback);
+            },
+            // drawdayChart(){
+            //     var dayChart = echarts.init(document.getElementById('dayChart'));
+            //     var dayoption = {
+            //         tooltip: {
+            //             trigger: 'axis',
+            //             axisPointer: {
+            //                 type: 'shadow',
+            //                 label: {
+            //                     show: true
+            //                 }
+            //             }
+            //         },
+            //         toolbox: {
+            //             show: true,
+            //             feature: {
+            //                 mark: {show: true},
+            //                 dataView: {show: true, readOnly: false},
+            //                 magicType: {show: true, type: ['line', 'bar']},
+            //                 restore: {show: true},
+            //                 saveAsImage: {show: true}
+            //             }
+            //         },
+            //         calculable: true,
+            //         legend: {
+            //             data: ['Growth', 'Budget 2011', 'Budget 2012'],
+            //             itemGap: 5
+            //         },
+            //         grid: {
+            //             top: '12%',
+            //             left: '1%',
+            //             right: '10%',
+            //             containLabel: true
+            //         },
+            //         xAxis: [
+            //             {
+            //                 type: 'category',
+            //                 data: obama_budget_2012.names
+            //             }
+            //         ],
+            //         yAxis: [
+            //             {
+            //                 type: 'value',
+            //                 name: 'Budget (million USD)',
+            //                 axisLabel: {
+            //                     formatter: function (a) {
+            //                         a = +a;
+            //                         return isFinite(a)
+            //                             ? echarts.format.addCommas(+a / 1000)
+            //                             : '';
+            //                     }
+            //                 }
+            //             }
+            //         ],
+            //         dataZoom: [
+            //             {
+            //                 show: true,
+            //                 start: 94,
+            //                 end: 100
+            //             },
+            //             {
+            //                 type: 'inside',
+            //                 start: 94,
+            //                 end: 100
+            //             },
+            //             {
+            //                 show: true,
+            //                 yAxisIndex: 0,
+            //                 filterMode: 'empty',
+            //                 width: 30,
+            //                 height: '80%',
+            //                 showDataShadow: false,
+            //                 left: '93%'
+            //             }
+            //         ],
+            //         series: [
+            //             {
+            //                 name: '每日最低',
+            //                 type: 'bar',
+            //                 data: [1,2,3,4,5,6,7,8]
+            //             }
+            //         ]
+            //     };
+            //     dayChart.setOption(dayoption);
+            // },
+            drawmonthChart(){
+                var myChart = echarts.init(document.getElementById('monthChart'));
+                var months = [];
+                var monthPrices = [];
+                for(var i = 0; i < this.lowestPrice_month.length; i++) {
+                    months.push(this.lowestPrice_month[i]['month']);
+                    monthPrices.push(this.lowestPrice_month[i]['price']);
+                }
+                option = {
+                    title: {
+                        text: '每月最低价格',
+                        subtext: '请先选择出行的月份'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataZoom: {
+                                yAxisIndex: 'none'
+                            },
+                            dataView: {readOnly: false},
+                            magicType: {type: ['line', 'bar']},
+                            restore: {},
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: months
+                    },
+                    yAxis: {
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value} '
+                        }
+                    },
+                    series: [
+                        {
+                            type: 'line',
+                            data: monthPrices,
+                            markPoint: {
+                                data: [
+                                    {type: 'max', name: '最大值'},
+                                    {type: 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine: {
+                                data: [
+                                    {type: 'average', name: '平均值'}
+                                ]
+                            }
+                        },
+
+                    ]
+                };
+                myChart.setOption(option);
+            // 处理点击事件并且弹出数据名称
+                myChart.on('click', function (params) {
+                    this.value1 = params.name;
+                    alert(this.value1);
+                    // 再根据用户点击的月份获取到这个月每天的最低价
+                    axios.get('/get_fly_day?&dDate=\''+this.value1+'\'&dCity=\''+this.value_locate1+'\'&aCity=\''+this.value_locate2+'\'').then(
+                        successResponse => {
+                            console.log("用户选择的月份的每天的最低价");
+                            console.log(successResponse);
+                            this.lowestPrice_day = successResponse.data;
+                        }
+                    ).catch(() => {
+                        console.log("error")
+                    });
+                });
+            },
+            // 先根据用户的输入获取到每个月的最低价
+            getSingle() {
+                axios.get('/get_fly_time?City=\'' + this.value_locate1 + '\'&aCity=\'' + this.value_locate2 + '\'').then(
+                    successResponse => {
+                        console.log(successResponse);
+                        this.lowestPrice_month = successResponse.data;
+                        console.log(this.lowestPrice_month)
+                    }
+                ).catch(() => {
+                    console.log("error")
+                });
+            }
+            // 获取单程票的数据
+        }
+    });
+
+</script>
+<style>
+    /*显示具体的航班信息*/
+    .text {
+        font-size: 14px;
+    }
+
+    .item {
+        margin-bottom: 18px;
+    }
+
+    .clearfix:before,
+    .clearfix:after {
+        display: table;
+        content: "";
+    }
+    .clearfix:after {
+        clear: both
+    }
+
+    .box-card {
+        width: 800px;
+        margin-top: 20px;
+    }
+
+    .el-input{
+        width: 300px;
+    }
+    .single_line{
+        display: flex;
+        /*flex: 1;*/
+    }
+    /*导航行的样式*/
+    .el-row {
+        margin-bottom: 10px;
+    }
+    .el-col {
+        border-radius: 4px;
+    }
+    .bg-purple-dark {
+        background: #99a9bf;
+    }
+    .bg-purple {
+        background: #d3dce6;
+    }
+    .bg-purple-light {
+        background: #e5e9f2;
+    }
+    .grid-content {
+        border-radius: 4px;
+        height: 36px;
+        text-align: center;
+        line-height: 36px;
+    }
+    .chart-content {
+        border-radius: 4px;
+        min-height: 36px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        /*text-align: center;*/
+        /*line-height: 36px;*/
+    }
+    .row-bg {
+        background-color: #f9fafc;
+    }
+    /*外面大框架的样式*/
+    .el-header{
+        background-color: #B3C0D1;
+        color: #333;
+        text-align: center;
+        line-height: 60px;
+    }
+
+    .el-main {
+        background-color: #E9EEF3;
+        color: #333;
+        /*text-align: center;*/
+        /*line-height: 460px;*/
+    }
+    .el-button{
+        color: black;
+    }
+    body{
+        margin: 0px;
+    }
+</style>
+</html>

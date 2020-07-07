@@ -36,6 +36,8 @@
                     <el-button type="text">单程</el-button>
                     <el-button type="text"><a href="round-trip.html">往返</a></el-button>
                     <el-button type="text"><a href="multiple-trip.html">多程</a></el-button>
+                    <el-button type="text"><a href="fly-time.html">何时飞</a></el-button>
+                    <el-button type="text"><a href="find-somewhere.html.html">飞哪里</a></el-button>
                 </div></el-col>
             </el-row>
 <!--            搜索框所在的位置-->
@@ -70,6 +72,7 @@
                         <el-date-picker
                                 v-model="value1"
                                 type="date"
+                                format="yyyy-MM-dd" value-format="yyyy-MM-dd"
                                 placeholder="选择日期">
                         </el-date-picker>
                         <el-button type="default" onclick=vee.getSingle()><span class="glyphicon glyphicon-plane">搜索</span></el-button>
