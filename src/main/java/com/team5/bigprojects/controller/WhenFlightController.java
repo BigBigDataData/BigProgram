@@ -1,13 +1,12 @@
 package com.team5.bigprojects.controller;
 
 import com.team5.bigprojects.bean.BasicQuery;
+import com.team5.bigprojects.bean.WhenFlightQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
@@ -16,17 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author lenovo
- */
-@Controller
-public class BasicFlightController {
+public class WhenFlightController {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @GetMapping("/BasicQuery1")
+    @GetMapping("/round-trip-lea")
     @ResponseBody
-    public List<Map<String, Object>> get_flight_info(@Valid BasicQuery query, BindingResult bindingResult) {
+    public List<Map<String, Object>> get_roundtrip_lea_info(@Valid WhenFlightQuery query, BindingResult bindingResult) {
         List<Map<String, Object>> listMaps = new ArrayList<Map<String, Object>>();
         Map<String, Object> map1 = new HashMap<String, Object>();
         if(bindingResult.hasErrors()){
@@ -46,9 +41,7 @@ public class BasicFlightController {
             }
             return null;
         }
-
-        // String sqlStr = "SELECT * FROM plane_log where dDate = "+query.getdDate() +"AND dCity ="+query.getdCity()+"AND aCity = "+ query.getaCity() +"ORDER BY price";
-        String sqlStr = "SELECT a.*,b.score,b.timelag FROM plane_log AS a LEFT JOIN dws_plane_score AS b ON a.flightNo = b.flightNo AND a.supplier = b.supplier AND a.dDate = b.dDate WHERE a.dDate ="+query.getdDate()+"AND a.dCity =" +query.getdCity()+ "AND a.aCity =" +query.getaCity()+ "ORDER BY b.score";
+        String sqlStr = "SELECT * FROM plane_log where dCity ="+query.getdCity()+"AND aCity = "+ query.getaCity() +"ORDER BY price";
         return jdbcTemplate.queryForList(sqlStr);
     }
 
