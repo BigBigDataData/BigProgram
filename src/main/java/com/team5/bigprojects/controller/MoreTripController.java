@@ -50,7 +50,8 @@ public class MoreTripController {
             }
             return null;
         }
-        String sqlStr = "SELECT * FROM plane_log where dDate = "+query.getdDate() +"AND dCity ="+query.getdCity()+"AND aCity = "+ query.getaCity() +"ORDER BY price";
+        //String sqlStr = "SELECT * FROM plane_log where dDate = "+query.getdDate() +"AND dCity ="+query.getdCity()+"AND aCity = "+ query.getaCity() +"ORDER BY price";
+        String sqlStr = "SELECT a.*,b.score,b.timelag FROM plane_log AS a LEFT JOIN dws_plane_score AS b ON a.flightNo = b.flightNo AND a.supplier = b.supplier AND a.dDate = b.dDate WHERE a.dDate ="+query.getdDate()+"AND a.dCity =" +query.getdCity()+ "AND a.aCity =" +query.getaCity()+ "ORDER BY b.score";
         return jdbcTemplate.queryForList(sqlStr);
     }
 
@@ -76,7 +77,35 @@ public class MoreTripController {
             }
             return null;
         }
-        String sqlStr = "SELECT * FROM plane_log where dDate = "+query.getdDate() +"AND dCity ="+query.getdCity()+"AND aCity = "+ query.getaCity() +"ORDER BY price";
+        //String sqlStr = "SELECT * FROM plane_log where dDate = "+query.getdDate() +"AND dCity ="+query.getdCity()+"AND aCity = "+ query.getaCity() +"ORDER BY price";
+        String sqlStr = "SELECT a.*,b.score,b.timelag FROM plane_log AS a LEFT JOIN dws_plane_score AS b ON a.flightNo = b.flightNo AND a.supplier = b.supplier AND a.dDate = b.dDate WHERE a.dDate ="+query.getdDate()+"AND a.dCity =" +query.getdCity()+ "AND a.aCity =" +query.getaCity()+ "ORDER BY b.score";
+        return jdbcTemplate.queryForList(sqlStr);
+    }
+
+    @GetMapping("/more-trip-third")
+    @ResponseBody
+    public List<Map<String, Object>> get_moretrip_third_info(@Valid BasicQuery query, BindingResult bindingResult) {
+        List<Map<String, Object>> listMaps = new ArrayList<Map<String, Object>>();
+        Map<String, Object> map1 = new HashMap<String, Object>();
+        if(bindingResult.hasErrors()){
+            List<ObjectError> objectErrors = bindingResult.getAllErrors();
+            System.out.println(objectErrors.toString());
+            for(ObjectError objectError: objectErrors){
+                System.out.println("objectError = " + objectError.getObjectName());
+                //map1.put("resultName",objectError.getObjectName());
+                System.out.println("objectError = " + objectError.getDefaultMessage());
+                map1.put("resultMessage",objectError.getDefaultMessage());
+                System.out.println("objectError = " + objectError.getCode());
+                //map1.put("resultCode",objectError.getCode());
+                System.out.println("objectError = " + objectError.getArguments());
+                //map1.put("resultArguments",objectError.getArguments());
+                String str = objectError.getDefaultMessage();
+                //listMaps.add(map1)
+            }
+            return null;
+        }
+        //String sqlStr = "SELECT * FROM plane_log where dDate = "+query.getdDate() +"AND dCity ="+query.getdCity()+"AND aCity = "+ query.getaCity() +"ORDER BY price";
+        String sqlStr = "SELECT a.*,b.score,b.timelag FROM plane_log AS a LEFT JOIN dws_plane_score AS b ON a.flightNo = b.flightNo AND a.supplier = b.supplier AND a.dDate = b.dDate WHERE a.dDate ="+query.getdDate()+"AND a.dCity =" +query.getdCity()+ "AND a.aCity =" +query.getaCity()+ "ORDER BY b.score";
         return jdbcTemplate.queryForList(sqlStr);
     }
 

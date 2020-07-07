@@ -46,7 +46,9 @@ public class BasicFlightController {
             }
             return null;
         }
-        String sqlStr = "SELECT * FROM plane_log where dDate = "+query.getdDate() +"AND dCity ="+query.getdCity()+"AND aCity = "+ query.getaCity() +"ORDER BY price";
+
+        // String sqlStr = "SELECT * FROM plane_log where dDate = "+query.getdDate() +"AND dCity ="+query.getdCity()+"AND aCity = "+ query.getaCity() +"ORDER BY price";
+        String sqlStr = "SELECT a.*,b.score,b.timelag FROM plane_log AS a LEFT JOIN dws_plane_score AS b ON a.flightNo = b.flightNo AND a.supplier = b.supplier AND a.dDate = b.dDate WHERE a.dDate ="+query.getdDate()+"AND a.dCity =" +query.getdCity()+ "AND a.aCity =" +query.getaCity()+ "ORDER BY b.score";
         return jdbcTemplate.queryForList(sqlStr);
     }
 
