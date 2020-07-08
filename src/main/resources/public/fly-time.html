@@ -5,17 +5,22 @@
     <title>Title</title>
     <script src="https://cdn.bootcss.com/vue/2.6.8/vue.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <!--    引入bootStrap的相关文件-->
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/js/echarts.min.js"></script>
     <script src="/js/jquery.params.js"></script>
+    <!--    <script src="/js/vue.js"></script>-->
 </head>
 
 <body>
@@ -24,17 +29,19 @@
         <el-header>淘机票</el-header>
         <el-main>
             <el-row :gutter="20">
-                <el-col :span="8"><div class="grid-content bg-purple">
-                    <el-button type="text"><a href="home.html">单程</a></el-button>
-                    <el-button type="text"><a href="round-trip.html">往返</a></el-button>
-                    <el-button type="text"><a href="multiple-trip.html">多程</a></el-button>
-                    <el-button type="text">何时飞</el-button>
-                    <el-button type="text"><a href="find-somewhere.html">飞哪里</a></el-button>
-                </div></el-col>
+                <el-col :span="8">
+                    <div class="grid-content bg-purple">
+                        <el-button type="text"><a href="home.html">单程</a></el-button>
+                        <el-button type="text"><a href="round-trip.html">往返</a></el-button>
+                        <el-button type="text"><a href="multiple-trip.html">多程</a></el-button>
+                        <el-button type="text">何时飞</el-button>
+                        <el-button type="text"><a href="find-somewhere.html">飞哪里</a></el-button>
+                    </div>
+                </el-col>
             </el-row>
             <!--            搜索框所在的位置-->
             <div style="margin: auto">
-                <div id="single_line" >
+                <div id="single_line">
                     <el-select v-model="value_locate1" placeholder="请选择出发地">
                         <el-option-group
                                 v-for="group in options"
@@ -61,19 +68,22 @@
                             </el-option>
                         </el-option-group>
                     </el-select>
-                    <el-button type="default" onclick=vee.getSingle()><span class="glyphicon glyphicon-plane">搜索</span></el-button>
+                    <el-button type="default" onclick=vee.getSingle()><span class="glyphicon glyphicon-plane">搜索</span>
+                    </el-button>
                 </div>
             </div>
             <el-row :gutter="20">
-                <el-col :span="18" :offset="3"><div class="chart-content bg-purple">
-                    <el-steps :active="active" finish-status="success">
-                        <el-step title="出行月份"></el-step>
-                        <el-step title="出行日期"></el-step>
-                        <el-step title="返程日期"></el-step>
-<!--                        <el-button style="height: 40px" @click="next">下一步</el-button>-->
-                        <el-button style="height: 40px"  onclick=vee.getround()>找机票</el-button>
-                    </el-steps>
-                </div></el-col>
+                <el-col :span="18" :offset="3">
+                    <div class="chart-content bg-purple">
+                        <el-steps :active="active" finish-status="success">
+                            <el-step title="出行月份"></el-step>
+                            <el-step title="出行日期"></el-step>
+                            <el-step title="返程日期"></el-step>
+                            <!--                        <el-button style="height: 40px" @click="next">下一步</el-button>-->
+                            <el-button style="height: 40px" onclick=vee.getround()>找机票</el-button>
+                        </el-steps>
+                    </div>
+                </el-col>
             </el-row>
             <!--            机票统计显示的位置-->
             <!--            <div v-if="lowestPrice_month.length!==0">-->
@@ -81,23 +91,29 @@
                 <el-timeline>
                     <el-timeline-item timestamp="选择出行月份" placement="top" style="margin-top: 20px">
                         <el-row :gutter="20">
-                            <el-col :span="18" :offset="3"><div class="chart-content bg-purple">
-                                <div id="monthChart" style="width: 800px;height: 400px"></div>
-                            </div></el-col>
+                            <el-col :span="18" :offset="3">
+                                <div class="chart-content bg-purple">
+                                    <div id="monthChart" style="width: 800px;height: 400px"></div>
+                                </div>
+                            </el-col>
                         </el-row>
                     </el-timeline-item>
-                    <el-timeline-item timestamp="选择指定月出行日期"  placement="top">
+                    <el-timeline-item timestamp="选择指定月出行日期" placement="top">
                         <el-row :gutter="20">
-                            <el-col :span="18" :offset="3"><div class="chart-content bg-purple">
-                                <div id="dayChart" style="width: 800px;height: 400px"></div>
-                            </div></el-col>
+                            <el-col :span="18" :offset="3">
+                                <div class="chart-content bg-purple">
+                                    <div id="dayChart" style="width: 800px;height: 400px"></div>
+                                </div>
+                            </el-col>
                         </el-row>
                     </el-timeline-item>
-                    <el-timeline-item timestamp="选择返程日期"  placement="top">
+                    <el-timeline-item timestamp="选择返程日期" placement="top">
                         <el-row :gutter="20">
-                            <el-col :span="18" :offset="3"><div class="chart-content bg-purple">
-                                <div id="backChart" style="width: 800px;height: 400px"></div>
-                            </div></el-col>
+                            <el-col :span="18" :offset="3">
+                                <div class="chart-content bg-purple">
+                                    <div id="backChart" style="width: 800px;height: 400px"></div>
+                                </div>
+                            </el-col>
                         </el-row>
                     </el-timeline-item>
                 </el-timeline>
@@ -107,16 +123,18 @@
 </div>
 </body>
 <script>
-    // 基于准备好的dom，初始化ECharts实例
+
+</script>
+<script>
     var value2_test;
     // var value2_test;
     // var value3_test;
     var vee = new Vue({
-        el:'#app',
-        data:{
+        el: '#app',
+        data: {
             // active用于控制步骤条的进度
             active: 0,
-            planeList:[],
+            planeList: [],
             options: [{
                 label: '热门城市',
                 options: [{
@@ -142,21 +160,21 @@
                     label: '大连'
                 }]
             }],
-            value_locate1:'',
-            value_locate2:'',
+            value_locate1: '',
+            value_locate2: '',
             // value1获取到价格最低的月份,用来传递全局的参数value2_test，跳转到往返页面
-            value1:value2_test,
+            value1: value2_test,
             // value2是用户选择的价格最低的天
-            value2:'',
+            value2: '',
             // value3获取用户选中的返回时间
-            value3:'',
-            lowestPrice_day:[],
+            value3: '',
+            lowestPrice_day: [],
             lowestPrice_month: [],
             lowestPrice_day_back: []
         },
-        methods:{
+        methods: {
             // 跳转到往返页面传参
-            getround(){
+            getround() {
                 //此处拼接内容
                 window.location.href = "round-trip.html?dDate=" + value2_test + "&aDate=" + vee.value3 + "&dCity=" + this.value_locate1 + "&aCity" + this.value_locate2;
             },
@@ -172,7 +190,7 @@
                         var myChart = echarts.init(document.getElementById('monthChart'));
                         var months = [];
                         var monthPrices = [];
-                        for(var i = 0; i < this.lowestPrice_month.length; i++) {
+                        for (var i = 0; i < this.lowestPrice_month.length; i++) {
                             months.push(this.lowestPrice_month[i]['month']);
                             monthPrices.push(this.lowestPrice_month[i]['price']);
                         }
@@ -230,255 +248,271 @@
                         // 处理点击事件并且弹出数据名称
                         myChart.on('click', function (params) {
                             // 可以弹出框提示用户已经选择的月份
-                            this.$confirm('是否选择'+this.value1+"月作为出发月份？", '提示', {
+                            Vue.prototype.$confirm('是否选择' + params.name + "月作为出发月份？", '提示', {
                                 confirmButtonText: '确定',
                                 cancelButtonText: '取消',
                                 type: 'warning'
                             }).then(() => {
-                                this.$message({
+                                Vue.prototype.$message({
                                     type: 'success',
                                     message: '选择成功出行月份!',
                                 });
                                 this.value1 = params.name;
+                                if (vee.active < 1) {
+                                    vee.active += 1;
+                                }
                                 value2_test = this.value1;
-                                vee.active+=1;
+
+                                console.log(vee.active);
+                                // 再根据用户点击的月份获取到这个月每天的最低价
+                                axios.get('/when-flight-day-leave?dCity=\'' + vee.value_locate1 + '\'&aCity=\'' + vee.value_locate2 + '\'&month=\'' + this.value1 + '\'').then(
+                                    successResponse => {
+                                        this.lowestPrice_day = successResponse.data;
+                                        var days = [];
+                                        var dayPrices = [];
+                                        for (var i = 0; i < this.lowestPrice_day.length; i++) {
+                                            days.push(this.lowestPrice_day[i]['dDate']);
+                                            dayPrices.push(this.lowestPrice_day[i]['price']);
+                                        }
+                                        var dayChart = echarts.init(document.getElementById('dayChart'));
+                                        var dayoption = {
+                                            tooltip: {
+                                                trigger: 'axis',
+                                                axisPointer: {
+                                                    type: 'shadow',
+                                                    label: {
+                                                        show: true
+                                                    }
+                                                }
+                                            },
+                                            toolbox: {
+                                                show: true,
+                                                feature: {
+                                                    mark: {show: true},
+                                                    dataView: {show: true, readOnly: false},
+                                                    magicType: {show: true, type: ['line', 'bar']},
+                                                    restore: {show: true},
+                                                    saveAsImage: {show: true}
+                                                }
+                                            },
+                                            calculable: true,
+                                            grid: {
+                                                top: '12%',
+                                                left: '1%',
+                                                right: '10%',
+                                                containLabel: true
+                                            },
+                                            xAxis: [
+                                                {
+                                                    type: 'category',
+                                                    data: days
+                                                }
+                                            ],
+                                            yAxis: [
+                                                {
+                                                    type: 'value',
+                                                    name: '匹配您的出行月份的每天的最低价',
+                                                    axisLabel: {
+                                                        formatter: function (a) {
+                                                            a = +a;
+                                                            return isFinite(a)
+                                                                ? echarts.format.addCommas(+a / 1000)
+                                                                : '';
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            dataZoom: [
+                                                {
+                                                    show: true,
+                                                    start: 94,
+                                                    end: 100
+                                                },
+                                                {
+                                                    type: 'inside',
+                                                    start: 94,
+                                                    end: 100
+                                                },
+                                                {
+                                                    show: true,
+                                                    yAxisIndex: 0,
+                                                    filterMode: 'empty',
+                                                    width: 30,
+                                                    height: '80%',
+                                                    showDataShadow: false,
+                                                    left: '93%'
+                                                }
+                                            ],
+                                            series: [
+                                                {
+                                                    name: '每日最低',
+                                                    type: 'bar',
+                                                    data: dayPrices
+                                                }
+                                            ]
+                                        };
+                                        dayChart.setOption(dayoption);
+                                        // 根据用户点击的天数返回价格最低的返程信息
+                                        dayChart.on('click', function (params) {
+                                            console.log("name:" + params.name);
+                                            Vue.prototype.$confirm('是否选择' + this.value2 + "月作为出发日期？", '提示', {
+                                                confirmButtonText: '确定',
+                                                cancelButtonText: '取消',
+                                                type: 'warning'
+                                            }).then(() => {
+                                                Vue.prototype.$message({
+                                                    type: 'success',
+                                                    message: '选择成功出行日期!',
+                                                });
+                                                this.value2 = params.name;
+                                                value2_test = this.value2;
+                                                if(vee.active<2){
+                                                    vee.active += 1;
+                                                }
+                                                axios.get('/when-flight-day-back?dCity=\'' + vee.value_locate2 + '\'&aCity=\'' + vee.value_locate1 + '\'&dDate=\'' + this.value2 + '\'').then(
+                                                    successResponse => {
+                                                        this.lowestPrice_day_back = successResponse.data;
+                                                        console.log(this.lowestPrice_day_back);
+                                                        var days_back = [];
+                                                        var dayPrices_back = [];
+                                                        for (var i = 0; i < this.lowestPrice_day_back.length; i++) {
+                                                            days_back.push(this.lowestPrice_day_back[i]['dDate']);
+                                                            dayPrices_back.push(this.lowestPrice_day_back[i]['price']);
+                                                        }
+                                                        // 画返程
+                                                        var daybackChart = echarts.init(document.getElementById('backChart'));
+                                                        var backoption = {
+                                                            tooltip: {
+                                                                trigger: 'axis',
+                                                                axisPointer: {
+                                                                    type: 'shadow',
+                                                                    label: {
+                                                                        show: true
+                                                                    }
+                                                                }
+                                                            },
+                                                            toolbox: {
+                                                                show: true,
+                                                                feature: {
+                                                                    mark: {show: true},
+                                                                    dataView: {show: true, readOnly: false},
+                                                                    magicType: {show: true, type: ['line', 'bar']},
+                                                                    restore: {show: true},
+                                                                    saveAsImage: {show: true}
+                                                                }
+                                                            },
+                                                            calculable: true,
+                                                            grid: {
+                                                                top: '12%',
+                                                                left: '1%',
+                                                                right: '10%',
+                                                                containLabel: true
+                                                            },
+                                                            xAxis: [
+                                                                {
+                                                                    type: 'category',
+                                                                    data: days_back
+                                                                }
+                                                            ],
+                                                            yAxis: [
+                                                                {
+                                                                    type: 'value',
+                                                                    name: '您选择的出行日期匹配的返程日期的最低价',
+                                                                    axisLabel: {
+                                                                        formatter: function (a) {
+                                                                            a = +a;
+                                                                            return isFinite(a)
+                                                                                ? echarts.format.addCommas(+a / 1000)
+                                                                                : '';
+                                                                        }
+                                                                    }
+                                                                }
+                                                            ],
+                                                            dataZoom: [
+                                                                {
+                                                                    show: true,
+                                                                    start: 94,
+                                                                    end: 100
+                                                                },
+                                                                {
+                                                                    type: 'inside',
+                                                                    start: 94,
+                                                                    end: 100
+                                                                },
+                                                                {
+                                                                    show: true,
+                                                                    yAxisIndex: 0,
+                                                                    filterMode: 'empty',
+                                                                    width: 30,
+                                                                    height: '80%',
+                                                                    showDataShadow: false,
+                                                                    left: '93%'
+                                                                }
+                                                            ],
+                                                            series: [
+                                                                {
+                                                                    name: '返程最低',
+                                                                    type: 'bar',
+                                                                    data: dayPrices_back
+                                                                }
+                                                            ]
+                                                        };
+                                                        daybackChart.setOption(backoption);
+                                                        daybackChart.on('click', function (params) {
+                                                            console.log("name:" + params.name);
+                                                            Vue.prototype.$confirm('是否选择' + this.value2 + "月作为返程日期？", '提示', {
+                                                                confirmButtonText: '确定',
+                                                                cancelButtonText: '取消',
+                                                                type: 'warning'
+                                                            }).then(() => {
+                                                                Vue.prototype.$message({
+                                                                    type: 'success',
+                                                                    message: '选择成功返程日期!',
+                                                                });
+                                                                this.value3 = params.name;
+                                                                value3_test = this.value3;
+                                                                if(vee.active<3){
+                                                                    vee.active += 1;
+                                                                }
+                                                            }).catch(() => {
+                                                                Vue.prototype.$message({
+                                                                    type: 'info',
+                                                                    message: '取消选择返程日期'
+                                                                });
+                                                            });
+                                                            console.log(vee.active);
+                                                        })
+                                                        //获取返程数据失败
+                                                    }).catch((error) => {
+                                                    console.log(error)
+                                                })
+
+
+                                                //用户确认出行日期
+                                            }).catch(() => {
+                                                Vue.prototype.$message({
+                                                    type: 'info',
+                                                    message: '取消选择出行日期'
+                                                });
+                                            });
+                                            console.log(vee.active);
+                                        });
+                                    }
+                                    //axios获取天数据失败
+                                ).catch((error) => {
+                                    console.log(error)
+                                });
+
+                                console.log(value2_test);
                             }).catch(() => {
-                                this.$message({
+                                Vue.prototype.$message({
                                     type: 'info',
                                     message: '取消选择出行月份'
                                 });
                             });
-                            console.log(vee.active);
-                            // 再根据用户点击的月份获取到这个月每天的最低价
-                            axios.get('/when-flight-day-leave?dCity=\'' + vee.value_locate1 + '\'&aCity=\'' + vee.value_locate2+'\'&month=\''+this.value1+'\'').then(
-                                successResponse => {
-                                    this.lowestPrice_day = successResponse.data;
-                                    var days = [];
-                                    var dayPrices = [];
-                                    for(var i = 0; i < this.lowestPrice_day.length; i++) {
-                                        days.push(this.lowestPrice_day[i]['dDate']);
-                                        dayPrices.push(this.lowestPrice_day[i]['price']);
-                                    }
-                                    var dayChart = echarts.init(document.getElementById('dayChart'));
-                                    var dayoption = {
-                                        tooltip: {
-                                            trigger: 'axis',
-                                            axisPointer: {
-                                                type: 'shadow',
-                                                label: {
-                                                    show: true
-                                                }
-                                            }
-                                        },
-                                        toolbox: {
-                                            show: true,
-                                            feature: {
-                                                mark: {show: true},
-                                                dataView: {show: true, readOnly: false},
-                                                magicType: {show: true, type: ['line', 'bar']},
-                                                restore: {show: true},
-                                                saveAsImage: {show: true}
-                                            }
-                                        },
-                                        calculable: true,
-                                        grid: {
-                                            top: '12%',
-                                            left: '1%',
-                                            right: '10%',
-                                            containLabel: true
-                                        },
-                                        xAxis: [
-                                            {
-                                                type: 'category',
-                                                data: days
-                                            }
-                                        ],
-                                        yAxis: [
-                                            {
-                                                type: 'value',
-                                                name: '匹配您的出行月份的每天的最低价',
-                                                axisLabel: {
-                                                    formatter: function (a) {
-                                                        a = +a;
-                                                        return isFinite(a)
-                                                            ? echarts.format.addCommas(+a / 1000)
-                                                            : '';
-                                                    }
-                                                }
-                                            }
-                                        ],
-                                        dataZoom: [
-                                            {
-                                                show: true,
-                                                start: 94,
-                                                end: 100
-                                            },
-                                            {
-                                                type: 'inside',
-                                                start: 94,
-                                                end: 100
-                                            },
-                                            {
-                                                show: true,
-                                                yAxisIndex: 0,
-                                                filterMode: 'empty',
-                                                width: 30,
-                                                height: '80%',
-                                                showDataShadow: false,
-                                                left: '93%'
-                                            }
-                                        ],
-                                        series: [
-                                            {
-                                                name: '每日最低',
-                                                type: 'bar',
-                                                data: dayPrices
-                                            }
-                                        ]
-                                    };
-                                    dayChart.setOption(dayoption);
-                                    // 根据用户点击的天数返回价格最低的返程信息
-                                    dayChart.on('click', function (params) {
-                                        console.log("name:"+params.name);
-                                        this.$confirm('是否选择'+this.value2+"月作为出发日期？", '提示', {
-                                            confirmButtonText: '确定',
-                                            cancelButtonText: '取消',
-                                            type: 'warning'
-                                        }).then(() => {
-                                            this.$message({
-                                                type: 'success',
-                                                message: '选择成功出行日期!',
-                                            });
-                                            this.value2 = params.name;
-                                            value2_test = this.value2;
-                                            vee.active+=1;
-                                        }).catch(() => {
-                                            this.$message({
-                                                type: 'info',
-                                                message: '取消选择出行日期'
-                                            });
-                                        });
-                                        console.log(vee.active);
-                                        axios.get('/when-flight-day-leave?dCity=\'' + vee.value_locate2 + '\'&aCity=\'' + vee.value_locate1+'\'&month=\''+this.value2+'\'').then(
-                                            successResponse => {
-                                                //获取数据开始画图
-                                                this.lowestPrice_day_back = successResponse.data;
-                                                console.log(this.lowestPrice_day_back);
-                                                var days_back = [];
-                                                var dayPrices_back = [];
-                                                for(var i = 0; i < this.lowestPrice_day_back.length; i++) {
-                                                    days_back.push(this.lowestPrice_day_back[i]['dDate']);
-                                                    dayPrices_back.push(this.lowestPrice_day_back[i]['price']);
-                                                }
-                                                // 开始画返程最低的价格
-                                                var daybackChart = echarts.init(document.getElementById('backChart'));
-                                                var backoption = {
-                                                    tooltip: {
-                                                        trigger: 'axis',
-                                                        axisPointer: {
-                                                            type: 'shadow',
-                                                            label: {
-                                                                show: true
-                                                            }
-                                                        }
-                                                    },
-                                                    toolbox: {
-                                                        show: true,
-                                                        feature: {
-                                                            mark: {show: true},
-                                                            dataView: {show: true, readOnly: false},
-                                                            magicType: {show: true, type: ['line', 'bar']},
-                                                            restore: {show: true},
-                                                            saveAsImage: {show: true}
-                                                        }
-                                                    },
-                                                    calculable: true,
-                                                    grid: {
-                                                        top: '12%',
-                                                        left: '1%',
-                                                        right: '10%',
-                                                        containLabel: true
-                                                    },
-                                                    xAxis: [
-                                                        {
-                                                            type: 'category',
-                                                            data: days_back
-                                                        }
-                                                    ],
-                                                    yAxis: [
-                                                        {
-                                                            type: 'value',
-                                                            name: '您选择的出行日期匹配的返程日期的最低价',
-                                                            axisLabel: {
-                                                                formatter: function (a) {
-                                                                    a = +a;
-                                                                    return isFinite(a)
-                                                                        ? echarts.format.addCommas(+a / 1000)
-                                                                        : '';
-                                                                }
-                                                            }
-                                                        }
-                                                    ],
-                                                    dataZoom: [
-                                                        {
-                                                            show: true,
-                                                            start: 94,
-                                                            end: 100
-                                                        },
-                                                        {
-                                                            type: 'inside',
-                                                            start: 94,
-                                                            end: 100
-                                                        },
-                                                        {
-                                                            show: true,
-                                                            yAxisIndex: 0,
-                                                            filterMode: 'empty',
-                                                            width: 30,
-                                                            height: '80%',
-                                                            showDataShadow: false,
-                                                            left: '93%'
-                                                        }
-                                                    ],
-                                                    series: [
-                                                        {
-                                                            name: '返程最低',
-                                                            type: 'bar',
-                                                            data: dayPrices_back
-                                                        }
-                                                    ]
-                                                };
-                                                daybackChart.setOption(backoption);
-                                                daybackChart.on('click', function (params) {
-                                                    console.log("name:"+params.name);
-                                                    this.$confirm('是否选择'+this.value2+"月作为返程日期？", '提示', {
-                                                        confirmButtonText: '确定',
-                                                        cancelButtonText: '取消',
-                                                        type: 'warning'
-                                                    }).then(() => {
-                                                        this.$message({
-                                                            type: 'success',
-                                                            message: '选择成功出行日期!',
-                                                        });
-                                                        this.value3 = params.name;
-                                                        value3_test = this.value3;
-                                                        vee.active+=1;
-                                                    }).catch(() => {
-                                                        this.$message({
-                                                            type: 'info',
-                                                            message: '取消选择出行日期'
-                                                        });
-                                                    });
-                                                    console.log(vee.active);
-                                                })
-                                            }).catch((error)=>{console.log(error)})
-                                    });
-                                }
-                            ).catch((error) => {
-                                console.log(error)
-                            });
                         });
                     }
+                    //获取月数据失败
                 ).catch((error) => {
                     console.log(error)
                 });
@@ -502,6 +536,7 @@
         display: table;
         content: "";
     }
+
     .clearfix:after {
         clear: both
     }
@@ -511,35 +546,43 @@
         margin-top: 20px;
     }
 
-    .el-input{
+    .el-input {
         width: 300px;
     }
-    .single_line{
+
+    .single_line {
         display: flex;
         /*flex: 1;*/
     }
+
     /*导航行的样式*/
     .el-row {
         margin-bottom: 10px;
     }
+
     .el-col {
         border-radius: 4px;
     }
+
     .bg-purple-dark {
         background: #99a9bf;
     }
+
     .bg-purple {
         background: #d3dce6;
     }
+
     .bg-purple-light {
         background: #e5e9f2;
     }
+
     .grid-content {
         border-radius: 4px;
         height: 36px;
         text-align: center;
         line-height: 36px;
     }
+
     .chart-content {
         border-radius: 4px;
         min-height: 36px;
@@ -548,11 +591,13 @@
         /*text-align: center;*/
         /*line-height: 36px;*/
     }
+
     .row-bg {
         background-color: #f9fafc;
     }
+
     /*外面大框架的样式*/
-    .el-header{
+    .el-header {
         background-color: #B3C0D1;
         color: #333;
         text-align: center;
@@ -565,10 +610,12 @@
         /*text-align: center;*/
         /*line-height: 460px;*/
     }
-    .el-button{
+
+    .el-button {
         color: black;
     }
-    body{
+
+    body {
         margin: 0px;
     }
 </style>
