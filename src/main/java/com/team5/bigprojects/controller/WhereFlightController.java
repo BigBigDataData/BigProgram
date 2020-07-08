@@ -1,6 +1,7 @@
 package com.team5.bigprojects.controller;
 
 import com.team5.bigprojects.bean.BasicQuery;
+import com.team5.bigprojects.bean.WhereFlightQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
@@ -14,21 +15,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @Controller
-public class IntelRecomController {
+public class WhereFlightController {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    /**
-     *
-     * @param query
-     * @param bindingResult
-     * @return
-     *
-     */
-    @GetMapping("/Intel-Recom")
+    @GetMapping("/where-flight")
     @ResponseBody
-    public List<Map<String, Object>> get_intelRecom_info(@Valid BasicQuery query, BindingResult bindingResult) {
+    public List<Map<String, Object>> get_where_flight_info(@Valid WhereFlightQuery query, BindingResult bindingResult) {
         List<Map<String, Object>> listMaps = new ArrayList<Map<String, Object>>();
         Map<String, Object> map1 = new HashMap<String, Object>();
         if(bindingResult.hasErrors()){
@@ -36,19 +31,21 @@ public class IntelRecomController {
             System.out.println(objectErrors.toString());
             for(ObjectError objectError: objectErrors){
                 System.out.println("objectError = " + objectError.getObjectName());
-                map1.put("resultName",objectError.getObjectName());
+                //map1.put("resultName",objectError.getObjectName());
                 System.out.println("objectError = " + objectError.getDefaultMessage());
                 map1.put("resultMessage",objectError.getDefaultMessage());
                 System.out.println("objectError = " + objectError.getCode());
-                map1.put("resultCode",objectError.getCode());
+                //map1.put("resultCode",objectError.getCode());
                 System.out.println("objectError = " + objectError.getArguments());
-                map1.put("resultArguments",objectError.getArguments());
+                //map1.put("resultArguments",objectError.getArguments());
                 String str = objectError.getDefaultMessage();
-                listMaps.add(map1);
+                //listMaps.add(map1)
             }
             return null;
         }
-        String sqlStr = "SELECT * FROM plane_log WHERE dDate = \"+query.getdDate() +\"AND dCity =\"+query.getdCity()+\"AND aCity = "+ query.getaCity() + "AS a LEFT JOIN dws_plane_score b ON a.flightNo=b.flightNo";
+
+        // String sqlStr = "SELECT * FROM plane_log where dDate = "+query.getdDate() +"AND dCity ="+query.getdCity()+"AND aCity = "+ query.getaCity() +"ORDER BY price";
+        String sqlStr = "SELECT aCity,price FROM where_to_go WHERE dDate = "+ query.getdDate() + " AND dCity = " + query.getdCity();
         return jdbcTemplate.queryForList(sqlStr);
     }
 

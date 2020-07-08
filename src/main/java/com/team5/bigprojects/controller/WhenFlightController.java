@@ -114,4 +114,30 @@ public class WhenFlightController {
         return jdbcTemplate.queryForList(sqlStr);
     }
 
+    @GetMapping("/when-flight-day-back2")
+    @ResponseBody
+    public List<Map<String, Object>> get_whenFlight_day_back2_info(@Valid BasicQuery query, BindingResult bindingResult) {
+        List<Map<String, Object>> listMaps = new ArrayList<Map<String, Object>>();
+        Map<String, Object> map1 = new HashMap<String, Object>();
+        if(bindingResult.hasErrors()){
+            List<ObjectError> objectErrors = bindingResult.getAllErrors();
+            System.out.println(objectErrors.toString());
+            for(ObjectError objectError: objectErrors){
+                System.out.println("objectError = " + objectError.getObjectName());
+                //map1.put("resultName",objectError.getObjectName());
+                System.out.println("objectError = " + objectError.getDefaultMessage());
+                map1.put("resultMessage",objectError.getDefaultMessage());
+                System.out.println("objectError = " + objectError.getCode());
+                //map1.put("resultCode",objectError.getCode());
+                System.out.println("objectError = " + objectError.getArguments());
+                //map1.put("resultArguments",objectError.getArguments());
+                String str = objectError.getDefaultMessage();
+                //listMaps.add(map1)
+            }
+            return null;
+        }
+        String sqlStr = "SELECT price,dDate FROM plane_log_lowest_day WHERE dDate >= " + query.getdDate()+" AND dDate < DATE_ADD(" +query.getdDate()+", INTERVAL 31 DAY) " + "AND dCity =" + query.getdCity()+ " AND aCity = " +query.getaCity()+ " ORDER BY dDate";
+        return jdbcTemplate.queryForList(sqlStr);
+    }
+
 }
