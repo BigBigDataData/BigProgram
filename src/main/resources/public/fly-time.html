@@ -127,8 +127,7 @@
 </script>
 <script>
     var value2_test;
-    // var value2_test;
-    // var value3_test;
+    var value3_test;
     var vee = new Vue({
         el: '#app',
         data: {
@@ -176,10 +175,13 @@
             // 跳转到往返页面传参
             getround() {
                 //此处拼接内容
-                window.location.href = "round-trip.html?dDate=" + value2_test + "&aDate=" + vee.value3 + "&dCity=" + this.value_locate1 + "&aCity" + this.value_locate2;
+                console.log("a"+this.value_locate2);
+                window.location.href = "round-trip.html?dDate=" + value2_test + "&aDate=" + value3_test + "&aCity=" + vee.value_locate2+"&dCity=" + vee.value_locate1;
             },
             // 先根据用户的输入获取到每个月的最低价
             getSingle() {
+                console.log(this.value_locate2);
+                console.log(this.value_locate1);
                 axios.get('/when-flight-month?dCity=\'' + this.value_locate1 + '\'&aCity=\'' + this.value_locate2 + '\'').then(
                     successResponse => {
                         this.lowestPrice_month = successResponse.data;
@@ -355,7 +357,7 @@
                                         // 根据用户点击的天数返回价格最低的返程信息
                                         dayChart.on('click', function (params) {
                                             console.log("name:" + params.name);
-                                            Vue.prototype.$confirm('是否选择' + this.value2 + "月作为出发日期？", '提示', {
+                                            Vue.prototype.$confirm('是否选择' + params.name + "月作为出发日期？", '提示', {
                                                 confirmButtonText: '确定',
                                                 cancelButtonText: '取消',
                                                 type: 'warning'
@@ -369,7 +371,7 @@
                                                 if(vee.active<2){
                                                     vee.active += 1;
                                                 }
-                                                axios.get('/when-flight-day-back?dCity=\'' + vee.value_locate2 + '\'&aCity=\'' + vee.value_locate1 + '\'&dDate=\'' + this.value2 + '\'').then(
+                                                axios.get('/when-flight-day-back2?dCity=\'' + vee.value_locate2 + '\'&aCity=\'' + vee.value_locate1 + '\'&dDate=\'' + this.value2 + '\'').then(
                                                     successResponse => {
                                                         this.lowestPrice_day_back = successResponse.data;
                                                         console.log(this.lowestPrice_day_back);
@@ -460,7 +462,7 @@
                                                         daybackChart.setOption(backoption);
                                                         daybackChart.on('click', function (params) {
                                                             console.log("name:" + params.name);
-                                                            Vue.prototype.$confirm('是否选择' + this.value2 + "月作为返程日期？", '提示', {
+                                                            Vue.prototype.$confirm('是否选择' + params.name + "月作为返程日期？", '提示', {
                                                                 confirmButtonText: '确定',
                                                                 cancelButtonText: '取消',
                                                                 type: 'warning'
@@ -502,7 +504,6 @@
                                 ).catch((error) => {
                                     console.log(error)
                                 });
-
                                 console.log(value2_test);
                             }).catch(() => {
                                 Vue.prototype.$message({

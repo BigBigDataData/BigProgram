@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.8/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!--    引入bootStrap的相关文件-->
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/js/jquery.params.js"></script>
+
+</head>
+
+<body>
+<div id="app">
+    <el-container>
+        <el-header>淘机票</el-header>
+        <el-main>
+            <el-row :gutter="20">
+                <el-col :span="16"><div class="grid-content bg-purple">
+                    排序：
+                    <el-button type="text">价格</el-button>
+                    <el-button type="text">时长</el-button>
+                    <el-button type="text">起飞时间</el-button>
+                    <el-button type="text">飞行时间</el-button>
+                    <el-button type="text">到达时间</el-button>
+                    <el-button type="text">性价比</el-button>
+                </div></el-col>
+                <el-col :span="8"><div class="grid-content bg-purple">
+                    <el-button type="text"><a href="home.html">单程</a></el-button>
+                    <el-button type="text"><a href="round-trip.html">往返</a></el-button>
+                    <el-button type="text"><a href="multiple-trip.html">多程</a></el-button>
+                    <el-button type="text"><a href="fly-time.html">何时飞</a></el-button>
+                    <el-button type="text"><a href="find-somewhere.html">飞哪里</a></el-button>
+                    <el-button type="text">拼航程</el-button>
+                </div></el-col>
+            </el-row>
+            <!--            搜索框所在的位置-->
+            <div style="margin: auto">
+                <div id="single_line" >
+                    <el-select v-model="value_locate1" placeholder="请选择出发地">
+                        <el-option-group
+                                v-for="group in options"
+                                :key="group.label"
+                                :label="group.label">
+                            <el-option
+                                    v-for="item in group.options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-option-group>
+                    </el-select>
+                    <el-select v-model="value_locate2" placeholder="请选择目的地">
+                        <el-option-group
+                                v-for="group in options"
+                                :key="group.label"
+                                :label="group.label">
+                            <el-option
+                                    v-for="item in group.options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-option-group>
+                    </el-select>
+                    <el-date-picker
+                            v-model="value1"
+                            type="date"
+                            format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+                            placeholder="选择日期">
+                    </el-date-picker>
+                    <el-button type="default" onclick=vee.getSingle()><span class="glyphicon glyphicon-plane">搜索</span></el-button>
+                </div>
+            </div>
+            <!--            机票显示的位置-->
+            <div id="list_parent" v-if="hasFlight">
+                <div class="infinite-list-wrapper" style="overflow:auto;margin:auto">
+                    <ul
+                            class="list"
+                            v-infinite-scroll="load"
+                            infinite-scroll-disabled="disabled">
+                        <el-card class="box-card">
+                            <div v-for="p in planeList" class="infinite-list-item">
+                                <div slot="header" class="clearfix">
+                                    <span>{{p.dCity1}}-{{p.flightNo1}}-￥{{p.price}}</span>
+                                    <el-button style="float: right; padding: 3px 0" type="text">{{p.flightNo2}}-{{p.dCity2}}</el-button>
+                                </div>
+                                <div class="text item">
+                                    <el-row>
+                                        <el-col :span="6"><div class="grid-content bg-purple">
+                                            {{p.dfTime1}}--{{p.dCity1}}
+                                        </div></el-col>
+                                        <el-col :span="12"><div class="grid-content bg-purple-light">
+                                            -----{{p.afTime1}}--{{p.aCity1}}-{{p.dfTime2}}-------->
+                                        </div></el-col>
+                                        <el-col :span="6"><div class="grid-content bg-purple">
+                                            {{p.aCity2}}--{{p.afTime2}}
+                                        </div></el-col>
+                                    </el-row>
+                                </div>
+<!--                                <div><span clas="glyphicon glyphicon-heart" style=" color:#ff9900">Number:{{p.score}}</span></div>-->
+                                <el-divider></el-divider>
+                            </div>
+                        </el-card>
+                    </ul>
+                    <p v-if="loading">加载中...</p>
+                    <p v-if="noMore">没有更多了</p>
+                </div>
+            </div>
+        </el-main>
+    </el-container>
+</div>
+</body>
+
+<script>
+    var vee = new Vue({
+        el:'#app',
+        data:{
+            // 一辆航班的数据信息,显示的时候暂时没用到，
+            planeList:[],
+            plane:{
+                // 到达机场
+                aAirport:'',
+                // 到达机场三字码
+                aCD:'',
+                // 到达城市
+                aCity:'',
+                // 到达时刻
+                aTime:'',
+                // 航空公司
+                airname:'',
+                // 出发机场
+                dAirport:'',
+                // 出发机场三字码
+                dCD:'',
+                // 出发城市
+                dCity:'',
+                // 出发日期
+                dDate:'',
+                // 出发时刻
+                dTime:'',
+                // 航班号
+                flightNo:'',
+                // 价格
+                price:'',
+                // 准点率
+                rate:'',
+                // 经停
+                via:''
+            },
+            count: 0,
+            loading: false,
+            value1:'',
+            options: [{
+                label: '热门城市',
+                options: [{
+                    value: '上海',
+                    label: '上海'
+                }, {
+                    value: '北京',
+                    label: '北京'
+                }]
+            }, {
+                label: '城市名',
+                options: [{
+                    value: '成都',
+                    label: '成都'
+                }, {
+                    value: '深圳',
+                    label: '深圳'
+                }, {
+                    value: '广州',
+                    label: '广州'
+                }, {
+                    value: '大连',
+                    label: '大连'
+                }]
+            }],
+            value_locate1:'',
+            value_locate2:''
+        },
+        computed: {
+            noMore () {
+                if(this.planeList.length!==0){
+                    return this.count > this.planeList.length;
+                }
+            },
+            disabled () {
+                return this.loading || this.noMore
+            },
+            hasFlight(){
+                return this.planeList.length !== 0;
+            }
+        },
+
+        methods:{
+            load (){
+                this.loading = true;
+                setTimeout(() => {
+                    this.count = this.planeList.length;
+                    this.count+=1;
+                    // console.log(this.count);
+                    this.loading = false
+                }, 2000)
+            },
+            getSingle(){
+                axios.get('/SplicingFlight?dCity=\''+this.value_locate1+'\'&aCity=\''+this.value_locate2+'\'&dDate=\''+this.value1+'\'').then(
+                    successResponse=>{
+                        console.log(successResponse);
+                        this.planeList = successResponse.data;
+                    }
+                ).catch(()=>{
+                    console.log("error")
+                })
+            }
+            // 获取单程票的数据
+        }
+    });
+    $(function () {
+        getData() ;
+    });
+    function getData(){
+        const dDate = $.query.get("dDate");
+        const aCity = $.query.get("aCity");
+        const dCity = $.query.get("dCity");
+        console.log("跳转");
+        console.log(dDate+"dDate");
+        console.log(aCity+"aCity");
+        console.log(dCity+"dCity");
+        // 获取数据，进行页面渲染
+        axios.get('/BasicQuery1?&dDate=\''+dDate +'\'&dCity=\''+dCity+'\'&aCity=\''+aCity+'\'').then(
+            successResponse=>{
+                console.log(successResponse);
+                vee.planeList = successResponse.data;
+            }
+        ).catch(()=>{
+            console.log("error")
+        })
+    }
+</script>
+<style>
+    /*显示具体的航班信息*/
+    .text {
+        font-size: 14px;
+    }
+
+    .item {
+        margin-bottom: 18px;
+    }
+
+    .clearfix:before,
+    .clearfix:after {
+        display: table;
+        content: "";
+    }
+    .clearfix:after {
+        clear: both
+    }
+
+    .box-card {
+        width: 800px;
+        margin-top: 20px;
+    }
+
+    /*无限滚动条*/
+    .list_parent{
+
+    }
+    .infinite-list-wrapper{
+        /*position: relative;*/
+        /*position: center;*/
+        width: 900px;
+    }
+    .el-input{
+        width: 300px;
+    }
+    .single_line{
+        display: flex;
+        /*flex: 1;*/
+    }
+    /*导航行的样式*/
+    .el-row {
+        margin-bottom: 10px;
+    }
+    .el-col {
+        border-radius: 4px;
+    }
+    .bg-purple-dark {
+        background: #99a9bf;
+    }
+    .bg-purple {
+        background: #d3dce6;
+    }
+    .bg-purple-light {
+        background: #e5e9f2;
+    }
+    .grid-content {
+        border-radius: 4px;
+        height: 36px;
+        text-align: center;
+        line-height: 36px;
+    }
+    .row-bg {
+        background-color: #f9fafc;
+    }
+    /*外面大框架的样式*/
+    .el-header{
+        background-color: #B3C0D1;
+        color: #333;
+        text-align: center;
+        line-height: 60px;
+    }
+
+    .el-main {
+        background-color: #E9EEF3;
+        color: #333;
+        /*text-align: center;*/
+        /*line-height: 460px;*/
+    }
+    .el-button{
+        color: black;
+    }
+    body{
+        margin: 0px;
+    }
+</style>
+</html>

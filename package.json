@@ -2,8 +2,8 @@
   "name": "bigprojects",
   "version": "1.0.0",
   "dependencies": {
-    "vue": "latest",
-    "vue": "latest",
-    "element-ui": "latest"
+    "echarts-china-cities-js": "^0.1.1",
+    "element-ui": "latest",
+    "vue": "latest"
   }
 }

@@ -15,6 +15,8 @@
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/js/jquery.params.js"></script>
+
 </head>
 
 <body>
@@ -37,7 +39,8 @@
                     <el-button type="text"><a href="round-trip.html">往返</a></el-button>
                     <el-button type="text"><a href="multiple-trip.html">多程</a></el-button>
                     <el-button type="text"><a href="fly-time.html">何时飞</a></el-button>
-                    <el-button type="text"><a href="find-somewhere.html.html">飞哪里</a></el-button>
+                    <el-button type="text"><a href="find-somewhere.html">飞哪里</a></el-button>
+                    <el-button type="text"><a href="splicingflight.html">拼航程</a></el-button>
                 </div></el-col>
             </el-row>
 <!--            搜索框所在的位置-->
@@ -97,13 +100,14 @@
                                             {{p.dCity}}--{{p.dTime}}--{{p.dAirport}}
                                         </div></el-col>
                                         <el-col :span="8"><div class="grid-content bg-purple-light">
-                                            --------------{{p.via}}-------------->
+                                            --------------{{p.via}}-{{p.timelag/3600|addZero}}h------------>
                                         </div></el-col>
                                         <el-col :span="8"><div class="grid-content bg-purple">
                                             {{p.aCity}}--{{p.aTime}}--{{p.aAirport}}
                                         </div></el-col>
                                     </el-row>
                                 </div>
+                               <div><span clas="glyphicon glyphicon-heart" style=" color:#ff9900">Number:{{p.score}}</span></div>
                                 <el-divider></el-divider>
                             </div>
                         </el-card>
@@ -118,6 +122,9 @@
 </body>
 
 <script>
+    Vue.filter('addZero',function(value){
+        return value.toFixed(2)
+    });
     var vee = new Vue({
         el:'#app',
         data:{
@@ -221,7 +228,27 @@
             // 获取单程票的数据
         }
     });
-
+    $(function () {
+        getData() ;
+    });
+    function getData(){
+        const dDate = $.query.get("dDate");
+        const aCity = $.query.get("aCity");
+        const dCity = $.query.get("dCity");
+        console.log("跳转");
+        console.log(dDate+"dDate");
+        console.log(aCity+"aCity");
+        console.log(dCity+"dCity");
+        // 获取数据，进行页面渲染
+        axios.get('/BasicQuery1?&dDate=\''+dDate +'\'&dCity=\''+dCity+'\'&aCity=\''+aCity+'\'').then(
+            successResponse=>{
+                console.log(successResponse);
+                vee.planeList = successResponse.data;
+            }
+        ).catch(()=>{
+            console.log("error")
+        })
+    }
 </script>
 <style>
     /*显示具体的航班信息*/

@@ -45,7 +45,7 @@ public class WhereFlightController {
         }
 
         // String sqlStr = "SELECT * FROM plane_log where dDate = "+query.getdDate() +"AND dCity ="+query.getdCity()+"AND aCity = "+ query.getaCity() +"ORDER BY price";
-        String sqlStr = "SELECT aCity,price FROM where_to_go WHERE dDate = "+ query.getdDate() + " AND dCity = " + query.getdCity();
+        String sqlStr = "SELECT aCity as name,price as value FROM where_to_go WHERE dDate = "+ query.getdDate() + " AND dCity = " + query.getdCity();
         return jdbcTemplate.queryForList(sqlStr);
     }
 
