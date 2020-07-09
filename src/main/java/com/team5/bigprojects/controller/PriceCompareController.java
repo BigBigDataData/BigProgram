@@ -41,8 +41,7 @@ public class PriceCompareController {
             }
             return null;
         }
-
-        String sqlStr = "SELECT price,supplier,url FROM plane_log WHERE dDate = "+query.getdDate()+ " AND dCity = "+query.getdCity()+" AND aCity = "+ query.getaCity() +" ORDER BY price";
+        String sqlStr = "SELECT price,supplier,url FROM plane_log WHERE dDate = "+query.getdDate()+ " AND dCity = "+query.getdCity()+" AND aCity = "+ query.getaCity() +" AND supplier = '携程机票' ORDER BY price";
         return jdbcTemplate.queryForList(sqlStr);
     }
 }
