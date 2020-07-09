@@ -263,30 +263,7 @@
             hasFlight(){
                 return this.planeList.length !== 0;
             },
-            // // 第二节航程控制
-            // noMore2 () {
-            //     if(this.planeList.length!==0){
-            //         return this.count > this.planeList2.length;
-            //     }
-            // },
-            // disabled2 () {
-            //     return this.loading || this.noMore2
-            // },
-            // hasFlight2(){
-            //     return this.planeList2.length !== 0;
-            // },
-            // // 第三节航程的控制
-            // noMore3 () {
-            //     if(this.planeList3.length!==0){
-            //         return this.count > this.planeList3.length;
-            //     }
-            // },
-            // disabled3 () {
-            //     return this.loading || this.noMore3
-            // },
-            // hasFlight3(){
-            //     return this.planeList3.length !== 0;
-            // }
+
         },
 
         methods:{
@@ -313,24 +290,6 @@
                     this.loading = false
                 }, 2000)
             },
-            // load2 (){
-            //     this.loading = true;
-            //     setTimeout(() => {
-            //         this.count = this.planeList2.length;
-            //         this.count+=1;
-            //         // console.log(this.count);
-            //         this.loading = false
-            //     }, 2000)
-            // },
-            // load3 (){
-            //     this.loading = true;
-            //     setTimeout(() => {
-            //         this.count = this.planeList3.length;
-            //         this.count+=1;
-            //         // console.log(this.count);
-            //         this.loading = false
-            //     }, 2000)
-            // },
             //获取三程的数据
             getOne(){
                 axios.get('/more-trip-first?&dDate=\''+this.value1+'\'&dCity=\''+this.value_locate1_1+'\'&aCity=\''+this.value_locate1_2+'\'').then(
@@ -361,7 +320,6 @@
                     console.log("error")
                 })
             }
-            // 获取单程票的数据
         }
     });
 

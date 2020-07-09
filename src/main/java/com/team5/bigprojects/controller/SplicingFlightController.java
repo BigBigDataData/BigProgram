@@ -42,7 +42,8 @@ public class SplicingFlightController {
             }
             return null;
         }
-        String sqlStr = "SELECT * FROM dws_plane_join WHERE dfTime1 LIKE " +query.getdDate()+ " AND dCity1 = " +query.getdCity()+ " AND aCity2 = " +query.getaCity()+ " ORDER BY price";
+        String sqlStr = "SELECT * FROM dws_plane_join WHERE dfTime1 LIKE " +query.getdDate()+" AND dCity1 = " +query.getdCity()+ " AND aCity2 = " +query.getaCity()+ " ORDER BY price";
+        System.out.println(sqlStr);
         return jdbcTemplate.queryForList(sqlStr);
     }
 }

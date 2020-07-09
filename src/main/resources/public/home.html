@@ -7,16 +7,18 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<!--    引入bootStrap的相关文件-->
+    <!--    引入bootStrap的相关文件-->
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/js/jquery.params.js"></script>
-
 </head>
 
 <body>
@@ -25,27 +27,30 @@
         <el-header>淘机票</el-header>
         <el-main>
             <el-row :gutter="20">
-                <el-col :span="16"><div class="grid-content bg-purple">
-                    排序：
-                    <el-button type="text">价格</el-button>
-                    <el-button type="text">时长</el-button>
-                    <el-button type="text">起飞时间</el-button>
-                    <el-button type="text">飞行时间</el-button>
-                    <el-button type="text">到达时间</el-button>
-                    <el-button type="text">性价比</el-button>
-                </div></el-col>
-                <el-col :span="8"><div class="grid-content bg-purple">
-                    <el-button type="text">单程</el-button>
-                    <el-button type="text"><a href="round-trip.html">往返</a></el-button>
-                    <el-button type="text"><a href="multiple-trip.html">多程</a></el-button>
-                    <el-button type="text"><a href="fly-time.html">何时飞</a></el-button>
-                    <el-button type="text"><a href="find-somewhere.html">飞哪里</a></el-button>
-                    <el-button type="text"><a href="splicingflight.html">拼航程</a></el-button>
-                </div></el-col>
+                <el-col :span="16">
+                    <div class="grid-content bg-purple">
+                        <el-button type="text" onclick=vee.sortByscore()>排序</el-button>
+                        <el-button type="text" onclick=vee.sortByPrice()>价格</el-button>
+                        <el-button type="text" onclick=vee.sortBydTime()>起飞时间</el-button>
+                        <el-button type="text" onclick=vee.sortBytimeLag()>飞行时间</el-button>
+                        <el-button type="text" onclick=vee.sortByaTime()>到达时间</el-button>
+                        <el-button type="text" onclick=vee.sortByscore()>性价比</el-button>
+                    </div>
+                </el-col>
+                <el-col :span="8">
+                    <div class="grid-content bg-purple">
+                        <el-button type="text">单程</el-button>
+                        <el-button type="text"><a href="round-trip.html">往返</a></el-button>
+                        <el-button type="text"><a href="multiple-trip.html">多程</a></el-button>
+                        <el-button type="text"><a href="fly-time.html">何时飞</a></el-button>
+                        <el-button type="text"><a href="find-somewhere.html">飞哪里</a></el-button>
+                        <el-button type="text"><a href="splicingflight.html">拼航程</a></el-button>
+                    </div>
+                </el-col>
             </el-row>
-<!--            搜索框所在的位置-->
+            <!--            搜索框所在的位置-->
             <div style="margin: auto">
-                <div id="single_line" >
+                <div id="single_line">
                     <el-select v-model="value_locate1" placeholder="请选择出发地">
                         <el-option-group
                                 v-for="group in options"
@@ -72,16 +77,19 @@
                             </el-option>
                         </el-option-group>
                     </el-select>
-                        <el-date-picker
-                                v-model="value1"
-                                type="date"
-                                format="yyyy-MM-dd" value-format="yyyy-MM-dd"
-                                placeholder="选择日期">
-                        </el-date-picker>
-                        <el-button type="default" onclick=vee.getSingle()><span class="glyphicon glyphicon-plane">搜索</span></el-button>
-                    </div>
+                    <el-date-picker
+                            v-model="value1"
+                            type="date"
+                            format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+                            placeholder="选择日期">
+                    </el-date-picker>
+                    <el-button type="default" onclick=vee.getSingle()><span class="glyphicon glyphicon-plane">搜索</span>
+                    </el-button>
+                    <!--                        携程的机票-->
+                    <span v-if="hasXiecheng" class="el-icon-position" style="margin-left: 30px"><a :href="xiechengList[0]['url']">携程最低:</a>{{xiechengList[0]['price']}}</span>
                 </div>
-<!--            机票显示的位置-->
+            </div>
+            <!--            机票显示的位置-->
             <div id="list_parent" v-if="hasFlight">
                 <div class="infinite-list-wrapper" style="overflow:auto;margin:auto">
                     <ul
@@ -96,18 +104,25 @@
                                 </div>
                                 <div class="text item">
                                     <el-row>
-                                        <el-col :span="8"><div class="grid-content bg-purple">
-                                            {{p.dCity}}--{{p.dTime}}--{{p.dAirport}}
-                                        </div></el-col>
-                                        <el-col :span="8"><div class="grid-content bg-purple-light">
-                                            --------------{{p.via}}-{{p.timelag/3600|addZero}}h------------>
-                                        </div></el-col>
-                                        <el-col :span="8"><div class="grid-content bg-purple">
-                                            {{p.aCity}}--{{p.aTime}}--{{p.aAirport}}
-                                        </div></el-col>
+                                        <el-col :span="8">
+                                            <div class="grid-content bg-purple">
+                                                {{p.dCity}}--{{p.dTime}}--{{p.dAirport}}
+                                            </div>
+                                        </el-col>
+                                        <el-col :span="8">
+                                            <div class="grid-content bg-purple-light">
+                                                --------------{{p.via}}-{{p.timelag/3600|addZero}}h------------>
+                                            </div>
+                                        </el-col>
+                                        <el-col :span="8">
+                                            <div class="grid-content bg-purple">
+                                                {{p.aCity}}--{{p.aTime}}--{{p.aAirport}}
+                                            </div>
+                                        </el-col>
                                     </el-row>
                                 </div>
-                               <div><span clas="glyphicon glyphicon-heart" style=" color:#ff9900">Number:{{p.score}}</span></div>
+                                <div><span clas="glyphicon glyphicon-heart"
+                                           style=" color:#ff9900">Number:{{p.score}}</span></div>
                                 <el-divider></el-divider>
                             </div>
                         </el-card>
@@ -122,48 +137,49 @@
 </body>
 
 <script>
-    Vue.filter('addZero',function(value){
+    Vue.filter('addZero', function (value) {
         return value.toFixed(2)
     });
     var vee = new Vue({
-        el:'#app',
-        data:{
+        el: '#app',
+        data: {
             // 一辆航班的数据信息,显示的时候暂时没用到，
-            planeList:[],
-            plane:{
+            beforeSort:[],
+            planeList: [],
+            plane: {
                 // 到达机场
-                aAirport:'',
+                aAirport: '',
                 // 到达机场三字码
-                aCD:'',
+                aCD: '',
                 // 到达城市
-                aCity:'',
+                aCity: '',
                 // 到达时刻
-                aTime:'',
+                aTime: '',
                 // 航空公司
-                airname:'',
+                airname: '',
                 // 出发机场
-                dAirport:'',
+                dAirport: '',
                 // 出发机场三字码
-                dCD:'',
+                dCD: '',
                 // 出发城市
-                dCity:'',
+                dCity: '',
                 // 出发日期
-                dDate:'',
+                dDate: '',
                 // 出发时刻
-                dTime:'',
+                dTime: '',
                 // 航班号
-                flightNo:'',
+                flightNo: '',
                 // 价格
-                price:'',
+                price: '',
                 // 准点率
-                rate:'',
+                rate: '',
                 // 经停
-                via:''
+                via: ''
             },
             count: 0,
             loading: false,
-             value1:'',
-             options: [{
+            value1: '',
+            options: [{
                 label: '热门城市',
                 options: [{
                     value: '上海',
@@ -188,64 +204,133 @@
                     label: '大连'
                 }]
             }],
-            value_locate1:'',
-            value_locate2:''
+            value_locate1: '',
+            value_locate2: '',
+            //携程
+            xiechengList: [{'price': '', 'supplier': '', 'url': ''}],
         },
         computed: {
-            noMore () {
-                if(this.planeList.length!==0){
+            noMore() {
+                if (this.planeList.length !== 0) {
                     return this.count > this.planeList.length;
                 }
             },
-            disabled () {
+            disabled() {
                 return this.loading || this.noMore
             },
-            hasFlight(){
+            hasFlight() {
                 return this.planeList.length !== 0;
+            },
+            hasXiecheng(){
+                return this.xiechengList.length !== 1;
             }
         },
+        methods: {
+            sortByPrice(){
+                this.planeList.sort(this.upPrice);
+            },
+            upPrice(x,y){
+                return x.price - y.price
+            },
+            //到达时刻
+            sortByaTime(){
+                this.planeList.sort(this.upaTime);
+            },
+            upaTime(x,y){
+                if(x.aTime>y.aTime){
+                    return 1;
+                }else{
+                    return -1;
+                }
+            },
+            //起飞时刻
+            sortBydTime(){
+                this.planeList.sort(this.updTime);
+            },
+            updTime(x,y){
+                if(x.dTime>y.dTime){
+                    return 1;
+                }else{
+                    return -1;
+                }
+            },
+            //飞行时间
+            sortBytimeLag(){
+                this.planeList.sort(this.uptimeLag);
+            },
+            uptimeLag(x,y){
+                if(x.timelag>y.timelag){
+                    return 1;
+                }else{
+                    return -1;
+                }
+            },
+            //得分
+            sortByscore(){
+                this.planeList.sort(this.upscore);
+            },
+            upscore(x,y){
+                if(x.score>y.score){
+                    return 1;
+                }else{
+                    return -1;
+                }
+            },
 
-        methods:{
-            load (){
+            load() {
                 this.loading = true;
                 setTimeout(() => {
                     this.count = this.planeList.length;
-                    this.count+=1;
+                    this.count += 1;
                     // console.log(this.count);
                     this.loading = false
                 }, 2000)
             },
-            getSingle(){
-                axios.get('/BasicQuery1?&dDate=\''+this.value1+'\'&dCity=\''+this.value_locate1+'\'&aCity=\''+this.value_locate2+'\'').then(
-                successResponse=>{
-                    console.log(successResponse);
-                    this.planeList = successResponse.data;
+            getSingle() {
+                axios.get('/BasicQuery1?&dDate=\'' + this.value1 + '\'&dCity=\'' + this.value_locate1 + '\'&aCity=\'' + this.value_locate2 + '\'').then(
+                    successResponse => {
+                        console.log(successResponse);
+                        this.planeList = successResponse.data;
+                        //重置
+                        this.beforeSort = successResponse.data;
+                    }
+                ).catch(() => {
+                    console.log("error")
+                });
+                //携程
+                axios.get('/PriceCompare?&dDate=\'' + this.value1 + '\'&dCity=\'' + this.value_locate1 + '\'&aCity=\'' + this.value_locate2 + '\'').then(
+                    successResponse => {
+                        console.log(successResponse);
+                        this.xiechengList = successResponse.data;
+                        console.log(xiechengList[0]['price']);
+                        console.log(xiechengList[0]['url']);
+                    }
+                ).catch((error) => {
+                    console.log(error)
+                })
             }
-        ).catch(()=>{
-            console.log("error")
-        })
-    }
             // 获取单程票的数据
         }
     });
     $(function () {
-        getData() ;
+        getData();
     });
-    function getData(){
+
+    function getData() {
         const dDate = $.query.get("dDate");
         const aCity = $.query.get("aCity");
         const dCity = $.query.get("dCity");
         console.log("跳转");
-        console.log(dDate+"dDate");
-        console.log(aCity+"aCity");
-        console.log(dCity+"dCity");
+        console.log(dDate + "dDate");
+        console.log(aCity + "aCity");
+        console.log(dCity + "dCity");
         // 获取数据，进行页面渲染
-        axios.get('/BasicQuery1?&dDate=\''+dDate +'\'&dCity=\''+dCity+'\'&aCity=\''+aCity+'\'').then(
-            successResponse=>{
+        axios.get('/BasicQuery1?&dDate=\'' + dDate + '\'&dCity=\'' + dCity + '\'&aCity=\'' + aCity + '\'').then(
+            successResponse => {
                 console.log(successResponse);
                 vee.planeList = successResponse.data;
             }
-        ).catch(()=>{
+        ).catch(() => {
             console.log("error")
         })
     }
@@ -265,6 +350,7 @@
         display: table;
         content: "";
     }
+
     .clearfix:after {
         clear: both
     }
@@ -275,48 +361,59 @@
     }
 
     /*无限滚动条*/
-    .list_parent{
+    .list_parent {
 
     }
-    .infinite-list-wrapper{
+
+    .infinite-list-wrapper {
         /*position: relative;*/
         /*position: center;*/
         width: 900px;
     }
-    .el-input{
+
+    .el-input {
         width: 300px;
     }
-    .single_line{
+
+    .single_line {
         display: flex;
         /*flex: 1;*/
     }
+
     /*导航行的样式*/
     .el-row {
         margin-bottom: 10px;
     }
+
     .el-col {
         border-radius: 4px;
     }
+
     .bg-purple-dark {
         background: #99a9bf;
     }
+
     .bg-purple {
         background: #d3dce6;
     }
+
     .bg-purple-light {
         background: #e5e9f2;
     }
+
     .grid-content {
         border-radius: 4px;
         height: 36px;
         text-align: center;
         line-height: 36px;
     }
+
     .row-bg {
         background-color: #f9fafc;
     }
+
     /*外面大框架的样式*/
-    .el-header{
+    .el-header {
         background-color: #B3C0D1;
         color: #333;
         text-align: center;
@@ -329,10 +426,12 @@
         /*text-align: center;*/
         /*line-height: 460px;*/
     }
-    .el-button{
+
+    .el-button {
         color: black;
     }
-    body{
+
+    body {
         margin: 0px;
     }
 </style>

@@ -183,6 +183,12 @@
                 }, {
                     value: '大连',
                     label: '大连'
+                }, {
+                    value: '昆明',
+                    label: '昆明'
+                },{
+                    value: '重庆',
+                    label: '重庆'
                 }]
             }],
             value_locate1:'',
@@ -213,7 +219,10 @@
                 }, 2000)
             },
             getSingle(){
-                axios.get('/SplicingFlight?dCity=\''+this.value_locate1+'\'&aCity=\''+this.value_locate2+'\'&dDate=\''+this.value1+'\'').then(
+                console.log(this.value1);
+                var str = "%";
+                console.log(str);
+                axios.get('/SplicingFlight?dDate='+this.value1+'\'&dCity=\''+this.value_locate1+'\'&aCity=\''+this.value_locate2+'\'').then(
                     successResponse=>{
                         console.log(successResponse);
                         this.planeList = successResponse.data;
@@ -225,27 +234,6 @@
             // 获取单程票的数据
         }
     });
-    $(function () {
-        getData() ;
-    });
-    function getData(){
-        const dDate = $.query.get("dDate");
-        const aCity = $.query.get("aCity");
-        const dCity = $.query.get("dCity");
-        console.log("跳转");
-        console.log(dDate+"dDate");
-        console.log(aCity+"aCity");
-        console.log(dCity+"dCity");
-        // 获取数据，进行页面渲染
-        axios.get('/BasicQuery1?&dDate=\''+dDate +'\'&dCity=\''+dCity+'\'&aCity=\''+aCity+'\'').then(
-            successResponse=>{
-                console.log(successResponse);
-                vee.planeList = successResponse.data;
-            }
-        ).catch(()=>{
-            console.log("error")
-        })
-    }
 </script>
 <style>
     /*显示具体的航班信息*/
