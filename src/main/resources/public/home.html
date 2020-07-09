@@ -222,7 +222,7 @@
                 return this.planeList.length !== 0;
             },
             hasXiecheng(){
-                return this.xiechengList.length !== 1;
+                return this.xiechengList[0].price !== '';
             }
         },
         methods: {
@@ -302,8 +302,10 @@
                     successResponse => {
                         console.log(successResponse);
                         this.xiechengList = successResponse.data;
-                        console.log(xiechengList[0]['price']);
-                        console.log(xiechengList[0]['url']);
+                        // if(this.xiechengList.length>0){
+                        //     console.log(xiechengList[0]['price']);
+                        //     console.log(xiechengList[0]['url']);
+                        // }
                     }
                 ).catch((error) => {
                     console.log(error)

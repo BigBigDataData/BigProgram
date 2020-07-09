@@ -27,7 +27,6 @@
                 <el-col :span="16"><div class="grid-content bg-purple">
                     排序：
                     <el-button type="text">价格</el-button>
-                    <el-button type="text">时长</el-button>
                     <el-button type="text">起飞时间</el-button>
                     <el-button type="text">飞行时间</el-button>
                     <el-button type="text">到达时间</el-button>
@@ -39,6 +38,7 @@
                     <el-button type="text"><a href="multiple-trip.html">多程</a></el-button>
                     <el-button type="text"><a href="fly-time.html">何时飞</a></el-button>
                     <el-button type="text"><a href="find-somewhere.html">飞哪里</a></el-button>
+                    <el-button type="text"><a href="splicingflight.html">拼航程</a></el-button>
                 </div></el-col>
             </el-row>
             <!--            搜索框所在的位置-->
@@ -100,14 +100,20 @@
                                         <el-col :span="8"><div class="grid-content bg-purple">
                                             {{p.dCity}}--{{p.dTime}}--{{p.dAirport}}
                                         </div></el-col>
-                                        <el-col :span="8"><div class="grid-content bg-purple-light">
-                                            --------------{{p.via}}-------------->
-                                        </div></el-col>
+                                        <el-col :span="8">
+                                            <div class="grid-content bg-purple-light">
+                                                --------------{{p.via}}-{{p.timelag/3600|addZero}}h------------>
+                                            </div>
+                                        </el-col>
                                         <el-col :span="8"><div class="grid-content bg-purple">
                                             {{p.aCity}}--{{p.aTime}}--{{p.aAirport}}
                                         </div></el-col>
                                     </el-row>
                                 </div>
+                                                            <div><span clas="glyphicon glyphicon-heart"
+                                                                       style=" color:#ff9900">Number:{{p.score}}</span></div>
+                                                            <el-divider></el-divider>
+
                                 <el-divider></el-divider>
                             </div>
                         </el-card>
@@ -136,14 +142,18 @@
                                         <el-col :span="8"><div class="grid-content row-bg">
                                             {{b.dCity}}--{{b.dTime}}--{{b.dAirport}}
                                         </div></el-col>
-                                        <el-col :span="8"><div class="grid-content bg-purple-light">
-                                            <--------------{{b.via}}--------------
-                                        </div></el-col>
+                                        <el-col :span="8">
+                                            <div class="grid-content bg-purple-light">
+                                                --------------{{b.via}}-{{b.timelag/3600|addZero}}h------------>
+                                            </div>
+                                        </el-col>
                                         <el-col :span="8"><div class="grid-content row-bg">
                                             {{b.aCity}}--{{b.aTime}}--{{b.aAirport}}
                                         </div></el-col>
                                     </el-row>
                                 </div>
+                                <div><span clas="glyphicon glyphicon-heart"
+                                           style=" color:#ff9900">Number:{{b.score}}</span></div>
                                 <el-divider></el-divider>
                             </div>
                         </el-card>
@@ -159,6 +169,9 @@
 </body>
 
 <script>
+    Vue.filter('addZero', function (value) {
+        return value.toFixed(2)
+    });
     var vee = new Vue({
         el:'#app',
         data:{

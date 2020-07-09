@@ -26,9 +26,8 @@
         <el-main>
             <el-row :gutter="20">
                 <el-col :span="16"><div class="grid-content bg-purple">
-                    排序：
-                    <el-button type="text">价格</el-button>
-                    <el-button type="text">时长</el-button>
+                    <el-button type="text">排序</el-button>
+                    <el-button type="text" onclick=vee.sortByPrice()>价格</el-button>
                     <el-button type="text">起飞时间</el-button>
                     <el-button type="text">飞行时间</el-button>
                     <el-button type="text">到达时间</el-button>
@@ -127,36 +126,6 @@
         data:{
             // 一辆航班的数据信息,显示的时候暂时没用到，
             planeList:[],
-            plane:{
-                // 到达机场
-                aAirport:'',
-                // 到达机场三字码
-                aCD:'',
-                // 到达城市
-                aCity:'',
-                // 到达时刻
-                aTime:'',
-                // 航空公司
-                airname:'',
-                // 出发机场
-                dAirport:'',
-                // 出发机场三字码
-                dCD:'',
-                // 出发城市
-                dCity:'',
-                // 出发日期
-                dDate:'',
-                // 出发时刻
-                dTime:'',
-                // 航班号
-                flightNo:'',
-                // 价格
-                price:'',
-                // 准点率
-                rate:'',
-                // 经停
-                via:''
-            },
             count: 0,
             loading: false,
             value1:'',
@@ -209,20 +178,25 @@
         },
 
         methods:{
+            sortByPrice(){
+                this.planeList.sort(this.upPrice);
+            },
+            upPrice(x,y){
+                return x.price - y.price
+            },
             load (){
                 this.loading = true;
                 setTimeout(() => {
                     this.count = this.planeList.length;
                     this.count+=1;
-                    // console.log(this.count);
                     this.loading = false
                 }, 2000)
             },
             getSingle(){
                 console.log(this.value1);
-                var str = "%";
-                console.log(str);
-                axios.get('/SplicingFlight?dDate='+this.value1+'\'&dCity=\''+this.value_locate1+'\'&aCity=\''+this.value_locate2+'\'').then(
+                console.log(this.value_locate1);
+                console.log(this.value_locate2);
+                axios.get('/SplicingFlight?dCity=\''+this.value_locate1+'\'&aCity=\''+this.value_locate2+'\'&dDate=\''+this.value1+'\'').then(
                     successResponse=>{
                         console.log(successResponse);
                         this.planeList = successResponse.data;
